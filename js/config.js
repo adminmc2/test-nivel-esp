@@ -76,25 +76,27 @@ const RECAPTCHA_CONFIG = {
 // =================================
 
 /**
- * Estructura de datos que se envía a Airtable:
+ * Estructura de datos que se envía a Airtable (ACTUALIZADA):
  * 
- * - Nombre: Nombre del estudiante
- * - Apellidos: Apellidos del estudiante
+ * - Nombre del estudiante: Nombre del estudiante
+ * - Apellidos del estudiante: Apellidos del estudiante
  * - Email: Email del estudiante
  * - Ciudad: Ciudad (opcional)
  * - Puntuación: Número de respuestas correctas
  * - Total Preguntas: Total de preguntas del test (40)
  * - Porcentaje: Porcentaje de aciertos
- * - Nivel: Nivel CEFR (A1, A2, B1, B2)
- * - Fecha: Fecha de realización del test
- * - Cómo nos conoció: Canal de adquisición
+ * - Nivel CEFR: Nivel CEFR (A1, A2, B1, B2)
+ * - Fecha de realización: Fecha de realización del test
+ * - Canal de adquisición: Cómo nos conoció (sin "Paseando")
  * - Propósito: Para qué necesita aprender español
- * - Frecuencia: Frecuencia de clases deseada
  * - Protección Datos: Aceptación de cláusula de protección de datos
- * - Respuestas: JSON con todas las respuestas del test
+ * - Respuestas detalladas: JSON con todas las respuestas del test
  * - Verificado reCAPTCHA: Indica si pasó la verificación de reCAPTCHA
  * - Idioma: "Español" (para distinguir del test de inglés)
- * - Tipo Test: "Test de nivel español"
+ * - Tipo de test de nivel: "Test de nivel español"
+ * 
+ * CAMPOS ELIMINADOS:
+ * - Frecuencia de curso: ❌ YA NO SE GUARDA
  */
 
 // =================================
@@ -230,29 +232,31 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // =================================
-// EJEMPLO DE ESTRUCTURA DE TABLA AIRTABLE
+// EJEMPLO DE ESTRUCTURA DE TABLA AIRTABLE ACTUALIZADA
 // =================================
 
 /**
- * Crea una tabla en Airtable con estos campos EXACTOS:
+ * Crea una tabla en Airtable con estos campos EXACTOS (ACTUALIZADA):
  * 
- * Nombre: Single line text
- * Apellidos: Single line text
+ * Nombre del estudiante: Single line text
+ * Apellidos del estudiante: Single line text
  * Email: Email
  * Ciudad: Single line text
  * Puntuación: Number
- * Total Preguntas: Number
  * Porcentaje: Number
- * Nivel: Single select (A1 - Principiante, A2 - Elemental, B1 - Intermedio, B2 - Intermedio Alto)
- * Fecha: Date
- * Cómo nos conoció: Single select (Búsqueda en navegador, Redes sociales, Por amigos, Por anuncios, Paseando, De otra forma)
+ * Nivel CEFR: Single select (A1, A2, B1, B2)
+ * Fecha de realización: Date
+ * Canal de adquisición: Single select (Búsqueda en navegador, Redes sociales, Por amigos, Por anuncios, De otra forma)
  * Propósito: Single select (Trabajo, Estudios, Negocios, Cultura)
- * Frecuencia: Single select (Clase diaria, Una por semana, Dos por semana)
- * Protección Datos: Single line text
- * Respuestas: Long text
- * Verificado reCAPTCHA: Single line text
- * Idioma: Single line text (para distinguir Español vs Inglés)
- * Tipo Test: Single line text (para especificar "Test de nivel español")
+ * Respuestas detalladas: Long text
+ * Tipo de test de nivel: Single line text
+ * Idioma: Single line text
+ * 
+ * CAMPOS ELIMINADOS (NO crear en Airtable):
+ * ❌ Frecuencia de curso
+ * ❌ Total Preguntas (simplificado)
+ * ❌ Protección Datos (simplificado)
+ * ❌ Verificado reCAPTCHA (simplificado)
  */
 
 // =================================
@@ -263,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // AIRTABLE_CONFIG, RECAPTCHA_CONFIG, executeRecaptcha(), validateAllConfigs()
 
 // =================================
-// 📋 LISTA DE VERIFICACIÓN FINAL
+// 📋 LISTA DE VERIFICACIÓN FINAL ACTUALIZADA
 // =================================
 
 /**
@@ -272,7 +276,7 @@ document.addEventListener('DOMContentLoaded', function() {
  * 1. ✅ Configurado AIRTABLE_CONFIG con tus datos reales
  * 2. ✅ Configurado RECAPTCHA_CONFIG con tu Site Key real  
  * 3. ✅ Actualizado index.html línea 12 con la misma Site Key
- * 4. ✅ Creado la tabla en Airtable con los campos exactos del ejemplo
+ * 4. ✅ Creado la tabla en Airtable con los campos exactos del ejemplo (SIN frecuencia)
  * 5. ✅ Probado que no hay errores en la consola del navegador (F12)
  * 
  * 🔍 PARA VERIFICAR:
@@ -285,4 +289,9 @@ document.addEventListener('DOMContentLoaded', function() {
  * - Revisa que las claves sean correctas
  * - Verifica que los nombres de campos en Airtable coincidan exactamente
  * - Asegúrate de tener permisos de escritura en Airtable
+ * 
+ * 🆕 CAMBIOS RECIENTES:
+ * - Eliminada opción "Paseando" de canal de adquisición
+ * - Eliminada pregunta "Frecuencia de curso" completamente
+ * - Formulario más corto y directo
  */
