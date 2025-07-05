@@ -106,9 +106,8 @@
     background-color: #B8A9D9; 
 }
 
-/* 🔧 EDITA AQUÍ EL AZUL OSCURO DEL BOTÓN */
 .bg-playa-navy { 
-    background-color: #1A1A1A; /* Cambia este color por el azul oscuro de tu brandbook */
+    background-color: #1A1A1A;
 }
 
 .bg-playa-teal { 
@@ -162,7 +161,7 @@
    ================================= */
 
 .btn-primary {
-    background-color: #1A1A1A; /* Azul oscuro - EDITA AQUÍ */
+    background-color: #1A1A1A;
     color: white;
     font-weight: bold;
     padding: 1rem 2rem;
@@ -174,27 +173,29 @@
     cursor: pointer;
 }
 
+/* Botón amarillo al hover (sin verde) */
 .btn-primary:hover {
-    background-color: #4A9B8E; /* Teal en hover */
+    background-color: #F4C85E; /* Amarillo al pasar cursor */
+    color: #1A1A1A; /* Texto oscuro para mejor contraste */
     transform: translateY(-1px);
-    box-shadow: 0 8px 12px -1px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 12px -1px rgba(244, 200, 94, 0.3);
 }
 
-/* ✅ NUEVO: Botón amarillo al hacer clic */
+/* Efecto al hacer clic */
 .btn-primary:active {
-    background-color: #F4C85E !important; /* Amarillo al presionar */
-    transform: translateY(0px); /* Vuelve a la posición original */
+    background-color: #E6B74F;
+    transform: translateY(0px);
     box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
 }
 
-/* ✅ ALTERNATIVA: Botón que se mantiene amarillo después del clic */
+/* Clase opcional para botón permanentemente amarillo */
 .btn-primary.clicked {
-    background-color: #F4C85E !important; /* Amarillo permanente */
-    color: #1A1A1A !important; /* Texto oscuro para mejor contraste */
+    background-color: #F4C85E;
+    color: #1A1A1A;
 }
 
 .btn-primary.clicked:hover {
-    background-color: #E6B74F !important; /* Amarillo más oscuro en hover */
+    background-color: #E6B74F;
 }
 
 /* =================================
@@ -259,7 +260,7 @@
     animation: fadeIn 0.3s ease-out;
 }
 
-/* ✅ NUEVA ANIMACIÓN: Efecto de "pulso" amarillo */
+/* Animación de pulso amarillo */
 @keyframes yellowPulse {
     0% {
         background-color: #1A1A1A;
@@ -277,8 +278,8 @@
 
 .btn-primary.pulse-yellow {
     animation: yellowPulse 0.6s ease-in-out;
-    background-color: #F4C85E !important;
-    color: #1A1A1A !important;
+    background-color: #F4C85E;
+    color: #1A1A1A;
 }
 
 /* =================================
