@@ -19,6 +19,8 @@
 
     <!-- Configuración de Airtable y reCAPTCHA -->
     <script src="js/config.js"></script>
+    <!-- Sistema bilingüe -->
+    <script src="js/languages.js"></script>
 
     <script type="text/babel">
         // Iconos SVG
@@ -81,6 +83,36 @@
             });
             const [submitted, setSubmitted] = React.useState(false);
             const [loading, setLoading] = React.useState(false);
+            const [language, setLanguage] = React.useState(getCurrentLanguage());
+
+            // ✅ Función para actualizar el idioma y re-renderizar
+            React.useEffect(() => {
+                window.updatePageContent = () => {
+                    setLanguage(getCurrentLanguage());
+                };
+                
+                return () => {
+                    delete window.updatePageContent;
+                };
+            }, []);
+
+            // ✅ Selector de idioma componente
+            const LanguageSelector = () => (
+                <div className="language-selector">
+                    <button 
+                        className={`lang-btn ${language === 'ESP' ? 'active' : ''}`}
+                        data-lang="ESP"
+                    >
+                        ESP
+                    </button>
+                    <button 
+                        className={`lang-btn ${language === 'ENG' ? 'active' : ''}`}
+                        data-lang="ENG"
+                    >
+                        ENG
+                    </button>
+                </div>
+            );
 
             // ✅ 40 preguntas del test de español - TODAS CORREGIDAS según el documento oficial
             const testQuestions = [
@@ -208,7 +240,8 @@
                                     "Respuestas": JSON.stringify(answers),
                                     "Verificado reCAPTCHA": typeof grecaptcha !== 'undefined' ? "Sí" : "No",
                                     "Idioma": "Español", // ✅ Campo específico para distinguir del inglés
-                                    "Tipo Test": "Test de nivel español" // ✅ Campo específico
+                                    "Tipo Test": "Test de nivel español", // ✅ Campo específico
+                                    "Idioma Interfaz": language === 'ESP' ? 'Español' : 'English' // ✅ Nuevo campo para el idioma de la interfaz
                                 }
                             }]
                         })
@@ -254,6 +287,9 @@
                     <div className="min-h-screen bg-playa-purple-light flex items-center justify-center p-4 pt-8">
                         <div className="bg-white rounded-3xl shadow-lg p-10 max-w-2xl w-full text-center border border-gray-100">
                             <div className="mb-8">
+                                {/* ✅ Selector de idioma */}
+                                <LanguageSelector />
+                                
                                 <div className="mx-auto mb-6 flex justify-center">
                                     <img 
                                         src="images/hablandis.svg" 
@@ -269,14 +305,14 @@
                                     </div>
                                 </div>
                                 <h1 className="font-aglet text-4xl font-bold text-black mb-6">
-                                    Test de Nivel de Español
+                                    {t('startPage.title')}
                                 </h1>
                                 <p className="text-lg text-black mb-6 font-raleway">
-                                    Evalúa tu nivel de español con nuestro test completo de gramática y vocabulario
+                                    {t('startPage.subtitle')}
                                 </p>
                                 <div className="bg-playa-purple-light rounded-xl p-6 mb-6 border border-playa-purple">
                                     <p className="font-raleway font-medium text-black">
-                                        📋 {testQuestions.length} preguntas • ⏱️ 15 minutos • 📊 Resultados inmediatos
+                                        📋 {t('startPage.info')}
                                     </p>
                                 </div>
                             </div>
@@ -285,7 +321,7 @@
                                 onClick={() => setCurrentPage('1')}
                                 className="btn-primary flex items-center mx-auto gap-3 font-aglet"
                             >
-                                Iniciar Test
+                                {t('startPage.startButton')}
                                 <icons.ChevronRight />
                             </button>
                         </div>
@@ -317,10 +353,10 @@
                             <div className="bg-white rounded-xl p-6 mb-6 shadow-sm border border-gray-100">
                                 <div className="flex justify-between items-center mb-3">
                                     <span className="font-aglet text-sm font-medium text-black">
-                                        Pregunta {questionPage.id} de {testQuestions.length}
+                                        {t('progress.question')} {questionPage.id} {t('progress.of')} {testQuestions.length}
                                     </span>
                                     <span className="font-aglet text-sm font-medium text-playa-purple">
-                                        {Math.round(progress)}% completado
+                                        {Math.round(progress)}% {t('progress.completed')}
                                     </span>
                                 </div>
                                 <div className="w-full bg-gray-200 rounded-full h-3">
@@ -369,7 +405,7 @@
                                         className="flex items-center gap-2 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-black rounded-lg transition-all duration-200 font-aglet"
                                     >
                                         <icons.ChevronLeft />
-                                        Anterior
+                                        {t('navigation.previous')}
                                     </button>
                                     
                                     <button
@@ -381,7 +417,7 @@
                                                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                         }`}
                                     >
-                                        {questionPage.id === testQuestions.length ? 'Finalizar' : 'Siguiente'}
+                                        {questionPage.id === testQuestions.length ? t('navigation.finish') : t('navigation.next')}
                                         <icons.ChevronRight />
                                     </button>
                                 </div>
@@ -414,10 +450,10 @@
                                         <icons.User />
                                     </div>
                                     <h2 className="font-aglet text-3xl font-bold text-black mb-2">
-                                        ¡Casi terminamos!
+                                        {t('studentForm.title')}
                                     </h2>
                                     <p className="text-black font-raleway">
-                                        Completa tus datos para recibir los resultados
+                                        {t('studentForm.subtitle')}
                                     </p>
                                 </div>
 
@@ -425,28 +461,28 @@
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                             <label className="block text-sm font-medium text-black mb-2 font-aglet">
-                                                Nombre *
+                                                {t('studentForm.fields.firstName.label')}
                                             </label>
                                             <input
                                                 type="text"
                                                 value={studentData.firstName}
                                                 onChange={(e) => handleStudentDataChange('firstName', e.target.value)}
                                                 className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-playa-purple focus:border-playa-purple font-raleway text-black"
-                                                placeholder="Tu nombre"
+                                                placeholder={t('studentForm.fields.firstName.placeholder')}
                                                 required
                                             />
                                         </div>
 
                                         <div>
                                             <label className="block text-sm font-medium text-black mb-2 font-aglet">
-                                                Apellidos *
+                                                {t('studentForm.fields.lastName.label')}
                                             </label>
                                             <input
                                                 type="text"
                                                 value={studentData.lastName}
                                                 onChange={(e) => handleStudentDataChange('lastName', e.target.value)}
                                                 className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-playa-purple focus:border-playa-purple font-raleway text-black"
-                                                placeholder="Tus apellidos"
+                                                placeholder={t('studentForm.fields.lastName.placeholder')}
                                                 required
                                             />
                                         </div>
@@ -454,80 +490,80 @@
 
                                     <div>
                                         <label className="block text-sm font-medium text-black mb-2 font-aglet">
-                                            Email *
+                                            {t('studentForm.fields.email.label')}
                                         </label>
                                         <input
                                             type="email"
                                             value={studentData.email}
                                             onChange={(e) => handleStudentDataChange('email', e.target.value)}
                                             className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-playa-purple focus:border-playa-purple font-raleway text-black"
-                                            placeholder="tu@email.com"
+                                            placeholder={t('studentForm.fields.email.placeholder')}
                                             required
                                         />
                                     </div>
 
                                     <div>
                                         <label className="block text-sm font-medium text-black mb-2 font-aglet">
-                                            Ciudad
+                                            {t('studentForm.fields.city.label')}
                                         </label>
                                         <input
                                             type="text"
                                             value={studentData.city}
                                             onChange={(e) => handleStudentDataChange('city', e.target.value)}
                                             className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-playa-purple focus:border-playa-purple font-raleway text-black"
-                                            placeholder="Tu ciudad"
+                                            placeholder={t('studentForm.fields.city.placeholder')}
                                         />
                                     </div>
 
                                     <div>
                                         <label className="block text-sm font-medium text-black mb-2 font-aglet">
-                                            ¿Cómo nos has conocido?
+                                            {t('studentForm.fields.howFoundUs.label')}
                                         </label>
                                         <select
                                             value={studentData.howFoundUs}
                                             onChange={(e) => handleStudentDataChange('howFoundUs', e.target.value)}
                                             className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-playa-purple focus:border-playa-purple font-raleway text-black"
                                         >
-                                            <option value="">Selecciona una opción</option>
-                                            <option value="busqueda-navegador">Búsqueda en navegador</option>
-                                            <option value="redes-sociales">Redes sociales</option>
-                                            <option value="amigos">Por amigos</option>
-                                            <option value="anuncios">Por anuncios</option>
-                                            <option value="paseando">Paseando</option>
-                                            <option value="otra">De otra forma</option>
+                                            <option value="">{t('studentForm.fields.howFoundUs.options.placeholder')}</option>
+                                            <option value="busqueda-navegador">{t('studentForm.fields.howFoundUs.options.browser')}</option>
+                                            <option value="redes-sociales">{t('studentForm.fields.howFoundUs.options.social')}</option>
+                                            <option value="amigos">{t('studentForm.fields.howFoundUs.options.friends')}</option>
+                                            <option value="anuncios">{t('studentForm.fields.howFoundUs.options.ads')}</option>
+                                            <option value="paseando">{t('studentForm.fields.howFoundUs.options.walking')}</option>
+                                            <option value="otra">{t('studentForm.fields.howFoundUs.options.other')}</option>
                                         </select>
                                     </div>
 
                                     <div>
                                         <label className="block text-sm font-medium text-black mb-2 font-aglet">
-                                            ¿Para qué necesitas aprender español?
+                                            {t('studentForm.fields.purpose.label')}
                                         </label>
                                         <select
                                             value={studentData.learningPurpose}
                                             onChange={(e) => handleStudentDataChange('learningPurpose', e.target.value)}
                                             className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-playa-purple focus:border-playa-purple font-raleway text-black"
                                         >
-                                            <option value="">Selecciona una opción</option>
-                                            <option value="trabajo">Trabajo</option>
-                                            <option value="estudios">Estudios</option>
-                                            <option value="negocios">Negocios</option>
-                                            <option value="cultura">Cultura</option>
+                                            <option value="">{t('studentForm.fields.purpose.options.placeholder')}</option>
+                                            <option value="trabajo">{t('studentForm.fields.purpose.options.work')}</option>
+                                            <option value="estudios">{t('studentForm.fields.purpose.options.studies')}</option>
+                                            <option value="negocios">{t('studentForm.fields.purpose.options.business')}</option>
+                                            <option value="cultura">{t('studentForm.fields.purpose.options.culture')}</option>
                                         </select>
                                     </div>
 
                                     <div>
                                         <label className="block text-sm font-medium text-black mb-2 font-aglet">
-                                            ¿Qué frecuencia de curso piensas que necesitas?
+                                            {t('studentForm.fields.frequency.label')}
                                         </label>
                                         <select
                                             value={studentData.frequency}
                                             onChange={(e) => handleStudentDataChange('frequency', e.target.value)}
                                             className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-playa-purple focus:border-playa-purple font-raleway text-black"
                                         >
-                                            <option value="">Selecciona una opción</option>
-                                            <option value="clase-diaria">Clase diaria</option>
-                                            <option value="una-por-semana">Una por semana</option>
-                                            <option value="dos-por-semana">Dos por semana</option>
+                                            <option value="">{t('studentForm.fields.frequency.options.placeholder')}</option>
+                                            <option value="clase-diaria">{t('studentForm.fields.frequency.options.daily')}</option>
+                                            <option value="una-por-semana">{t('studentForm.fields.frequency.options.weekly')}</option>
+                                            <option value="dos-por-semana">{t('studentForm.fields.frequency.options.biweekly')}</option>
                                         </select>
                                     </div>
 
@@ -542,7 +578,7 @@
                                                 required
                                             />
                                             <label htmlFor="dataProtection" className="text-xs text-gray-700 font-raleway leading-relaxed">
-                                                <span className="font-semibold">Protección de Datos:</span> En cumplimiento de lo establecido en la Ley Orgánica 15/1999, de 13 de diciembre, de Protección de Datos de Carácter Personal y sus reglamentos de desarrollo, Hablandis - Centro Internacional de idiomas, marca registrada de LA PLAYA ESCUELA DE ESPAÑOL S.L. informa al firmante del presente test de nivel que los datos de carácter personal proporcionados a través del mismo quedarán incorporados a un fichero para su tratamiento automatizado con la finalidad de prestar y ofrecer nuestros servicios. El titular y responsable de dicho fichero es LA PLAYA ESCUELA DE ESPAÑOL S.L. El titular de los datos podrá ejercer los derechos de acceso, cancelación o rectificación mediante comunicación escrita dirigida al responsable y titular del fichero, remitida a info@hablandis.com
+                                                <span className="font-semibold">{t('studentForm.dataProtection.title')}</span> {t('studentForm.dataProtection.text')}
                                             </label>
                                         </div>
                                     </div>
@@ -550,9 +586,9 @@
                                     {/* ✅ CORREGIDO: Indicador de protección reCAPTCHA como en inglés */}
                                     <div className="text-center">
                                         <p className="text-xs text-gray-500 font-raleway">
-                                            🛡️ Este formulario está protegido por reCAPTCHA de Google<br/>
-                                            <a href="https://policies.google.com/privacy" target="_blank" className="text-playa-purple hover:underline">Política de Privacidad</a> y 
-                                            <a href="https://policies.google.com/terms" target="_blank" className="text-playa-purple hover:underline ml-1">Términos de Servicio</a>
+                                            🛡️ {t('studentForm.recaptcha.text')}<br/>
+                                            <a href="https://policies.google.com/privacy" target="_blank" className="text-playa-purple hover:underline">{t('studentForm.recaptcha.privacy')}</a> y 
+                                            <a href="https://policies.google.com/terms" target="_blank" className="text-playa-purple hover:underline ml-1">{t('studentForm.recaptcha.terms')}</a>
                                         </p>
                                     </div>
                                 </div>
@@ -563,7 +599,7 @@
                                         className="flex items-center gap-2 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-black rounded-lg transition-all duration-200 font-aglet"
                                     >
                                         <icons.ChevronLeft />
-                                        Volver
+                                        {t('studentForm.buttons.back')}
                                     </button>
                                     
                                     <button
@@ -578,12 +614,12 @@
                                         {loading ? (
                                             <>
                                                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                                                Guardando...
+                                                {t('studentForm.buttons.sending')}
                                             </>
                                         ) : (
                                             <>
                                                 <icons.CheckCircle />
-                                                Enviar Resultados
+                                                {t('studentForm.buttons.submit')}
                                             </>
                                         )}
                                     </button>
@@ -620,39 +656,35 @@
                                 </div>
                                 
                                 <h2 className="font-aglet text-3xl font-bold text-black mb-6">
-                                    ¡Test Completado!
+                                    {t('results.title')}
                                 </h2>
                                 
                                 <div className="bg-playa-purple text-white rounded-xl p-8 mb-6">
                                     <h3 className="font-aglet text-2xl font-bold mb-4">
-                                        Tu Nivel: {level === "A1" ? "A1 - Principiante" : 
-                                                   level === "A2" ? "A2 - Elemental" :
-                                                   level === "B1" ? "B1 - Intermedio" :
-                                                   level === "B2" ? "B2 - Intermedio Alto" : level}
+                                        {t('results.yourLevel')} {t(`results.levels.${level}`)}
                                     </h3>
                                     <p className="font-raleway text-lg">
-                                        {score.correct} de {score.total} respuestas correctas
+                                        {score.correct} {t('progress.of')} {score.total} {t('results.score')}
                                     </p>
                                     <p className="font-raleway text-base opacity-90">
-                                        ({score.percentage}% de aciertos)
+                                        ({score.percentage}% {t('results.percentage')})
                                     </p>
                                 </div>
 
                                 <div className="bg-gray-50 rounded-xl p-6 mb-6 border border-gray-200">
-                                    <h4 className="font-aglet font-bold text-black mb-4 text-lg">Datos Guardados:</h4>
+                                    <h4 className="font-aglet font-bold text-black mb-4 text-lg">{t('results.savedData')}</h4>
                                     <div className="text-left space-y-2 text-black font-raleway">
-                                        <p><strong>Nombre:</strong> {studentData.firstName} {studentData.lastName}</p>
-                                        <p><strong>Email:</strong> {studentData.email}</p>
-                                        {studentData.city && <p><strong>Ciudad:</strong> {studentData.city}</p>}
-                                        {studentData.howFoundUs && <p><strong>Cómo nos conoció:</strong> {studentData.howFoundUs}</p>}
-                                        {studentData.learningPurpose && <p><strong>Propósito:</strong> {studentData.learningPurpose}</p>}
-                                        {studentData.frequency && <p><strong>Frecuencia:</strong> {studentData.frequency}</p>}
+                                        <p><strong>{t('results.fields.name')}</strong> {studentData.firstName} {studentData.lastName}</p>
+                                        <p><strong>{t('results.fields.email')}</strong> {studentData.email}</p>
+                                        {studentData.city && <p><strong>{t('results.fields.city')}</strong> {studentData.city}</p>}
+                                        {studentData.howFoundUs && <p><strong>{t('results.fields.howFoundUs')}</strong> {studentData.howFoundUs}</p>}
+                                        {studentData.learningPurpose && <p><strong>{t('results.fields.purpose')}</strong> {studentData.learningPurpose}</p>}
+                                        {studentData.frequency && <p><strong>{t('results.fields.frequency')}</strong> {studentData.frequency}</p>}
                                     </div>
                                 </div>
 
                                 <p className="text-black mb-8 font-raleway">
-                                    Tus resultados han sido guardados exitosamente. 
-                                    Pronto recibirás más información en tu email.
+                                    {t('results.successMessage')}
                                 </p>
 
                                 <button
@@ -667,7 +699,7 @@
                                     }}
                                     className="bg-playa-purple hover:bg-playa-navy text-white font-bold py-4 px-8 rounded-lg transition-all duration-200 font-aglet"
                                 >
-                                    Realizar Nuevo Test
+                                    {t('results.newTestButton')}
                                 </button>
                             </div>
                         </div>
