@@ -19,7 +19,7 @@ const TRANSLATIONS = {
         startPage: {
             title: "Test de Nivel de Español",
             subtitle: "Evalúa tu nivel de español con nuestro test completo de gramática y vocabulario",
-            info: "40 preguntas • 15 minutos • Resultados inmediatos",
+            info: "40 preguntas • 10 minutos • Resultados inmediatos", // ✅ CORREGIDO: 10 minutos
             startButton: "Iniciar Test"
         },
         
@@ -143,7 +143,7 @@ const TRANSLATIONS = {
         startPage: {
             title: "Spanish Level Test",
             subtitle: "Evaluate your Spanish level with our complete grammar and vocabulary test",
-            info: "40 questions • 15 minutes • Instant results",
+            info: "40 questions • 10 minutes • Instant results", // ✅ CORREGIDO: 10 minutos
             startButton: "Start Test"
         },
         
