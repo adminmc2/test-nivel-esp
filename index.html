@@ -74,7 +74,6 @@
                 city: '',
                 howFoundUs: '',
                 learningPurpose: '',
-                frequency: '',
                 dataProtection: false
             });
             const [submitted, setSubmitted] = React.useState(false);
@@ -208,7 +207,6 @@
                     console.log('   - Ciudad:', studentData.city);
                     console.log('   - Canal adquisición:', studentData.howFoundUs);
                     console.log('   - Propósito:', studentData.learningPurpose);
-                    console.log('   - Frecuencia:', studentData.frequency);
                     console.log('   - Protección datos:', studentData.dataProtection);
                     
                     console.log('⚙️ [PASO 3] Validando configuración Airtable...');
@@ -235,7 +233,6 @@
                                 "Ciudad": studentData.city || "",
                                 "Canal de adquisición": studentData.howFoundUs || "",
                                 "Propósito": studentData.learningPurpose || "",
-                                "Frecuencia de curso": studentData.frequency || "",
                                 "Tipo de test de nivel": "Test de nivel español",
                                 "Idioma": "Español",
                                 "Puntuación": score.correct,
@@ -586,7 +583,6 @@
                                             <option value="redes-sociales">{t('studentForm.fields.howFoundUs.options.social')}</option>
                                             <option value="amigos">{t('studentForm.fields.howFoundUs.options.friends')}</option>
                                             <option value="anuncios">{t('studentForm.fields.howFoundUs.options.ads')}</option>
-                                            <option value="paseando">{t('studentForm.fields.howFoundUs.options.walking')}</option>
                                             <option value="otra">{t('studentForm.fields.howFoundUs.options.other')}</option>
                                         </select>
                                     </div>
@@ -605,22 +601,6 @@
                                             <option value="estudios">{t('studentForm.fields.purpose.options.studies')}</option>
                                             <option value="negocios">{t('studentForm.fields.purpose.options.business')}</option>
                                             <option value="cultura">{t('studentForm.fields.purpose.options.culture')}</option>
-                                        </select>
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm font-medium text-black mb-2 font-aglet">
-                                            {t('studentForm.fields.frequency.label')}
-                                        </label>
-                                        <select
-                                            value={studentData.frequency}
-                                            onChange={(e) => handleStudentDataChange('frequency', e.target.value)}
-                                            className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-playa-purple focus:border-playa-purple font-raleway text-black"
-                                        >
-                                            <option value="">{t('studentForm.fields.frequency.options.placeholder')}</option>
-                                            <option value="clase-diaria">{t('studentForm.fields.frequency.options.daily')}</option>
-                                            <option value="una-por-semana">{t('studentForm.fields.frequency.options.weekly')}</option>
-                                            <option value="dos-por-semana">{t('studentForm.fields.frequency.options.biweekly')}</option>
                                         </select>
                                     </div>
 
@@ -733,7 +713,6 @@
                                         {studentData.city && <p><strong>{t('results.fields.city')}</strong> {studentData.city}</p>}
                                         {studentData.howFoundUs && <p><strong>{t('results.fields.howFoundUs')}</strong> {studentData.howFoundUs}</p>}
                                         {studentData.learningPurpose && <p><strong>{t('results.fields.purpose')}</strong> {studentData.learningPurpose}</p>}
-                                        {studentData.frequency && <p><strong>{t('results.fields.frequency')}</strong> {studentData.frequency}</p>}
                                     </div>
                                 </div>
 
@@ -747,7 +726,7 @@
                                         setAnswers({});
                                         setStudentData({ 
                                             firstName: '', lastName: '', email: '', city: '',
-                                            howFoundUs: '', learningPurpose: '', frequency: '', dataProtection: false
+                                            howFoundUs: '', learningPurpose: '', dataProtection: false
                                         });
                                         setSubmitted(false);
                                     }}
