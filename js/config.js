@@ -1,5 +1,5 @@
 // =================================
-// CONFIGURACIÓN COMPLETA - HABLANDIS TEST DE INGLÉS
+// CONFIGURACIÓN COMPLETA - HABLANDIS TEST DE ESPAÑOL
 // =================================
 
 /**
@@ -83,16 +83,18 @@ const RECAPTCHA_CONFIG = {
  * - Email: Email del estudiante
  * - Ciudad: Ciudad (opcional)
  * - Puntuación: Número de respuestas correctas
- * - Total Preguntas: Total de preguntas del test (39)
+ * - Total Preguntas: Total de preguntas del test (40)
  * - Porcentaje: Porcentaje de aciertos
  * - Nivel: Nivel CEFR (A1, A2, B1, B2)
  * - Fecha: Fecha de realización del test
  * - Cómo nos conoció: Canal de adquisición
- * - Propósito: Para qué necesita aprender inglés
+ * - Propósito: Para qué necesita aprender español
  * - Frecuencia: Frecuencia de clases deseada
  * - Protección Datos: Aceptación de cláusula de protección de datos
  * - Respuestas: JSON con todas las respuestas del test
  * - Verificado reCAPTCHA: Indica si pasó la verificación de reCAPTCHA
+ * - Idioma: "Español" (para distinguir del test de inglés)
+ * - Tipo Test: "Test de nivel español"
  */
 
 // =================================
@@ -249,6 +251,8 @@ document.addEventListener('DOMContentLoaded', function() {
  * Protección Datos: Single line text
  * Respuestas: Long text
  * Verificado reCAPTCHA: Single line text
+ * Idioma: Single line text (para distinguir Español vs Inglés)
+ * Tipo Test: Single line text (para especificar "Test de nivel español")
  */
 
 // =================================
