@@ -1,5 +1,5 @@
 // =================================
-// CONFIGURACIÓN COMPLETA - HABLANDIS TEST DE ESPAÑOL
+// CONFIGURACIÓN COMPLETA - HABLANDIS TEST DE INGLÉS
 // =================================
 
 /**
