@@ -1,0 +1,216 @@
+/* =================================
+   ESTILOS PERSONALIZADOS - LA PLAYA
+   ================================= */
+
+/* Tipografías */
+.font-aglet { 
+    font-family: 'Aglet Mono', monospace; 
+}
+
+.font-raleway { 
+    font-family: 'Raleway', sans-serif; 
+}
+
+/* Iconos */
+.icon { 
+    display: inline-block; 
+    width: 1em; 
+    height: 1em; 
+    vertical-align: middle; 
+}
+
+/* =================================
+   COLORES DE LA PLAYA
+   ================================= */
+
+/* Fondos muy claros para lectura óptima */
+.bg-playa-green-light { 
+    background-color: #f4f8f0; 
+}
+
+.bg-playa-yellow-light { 
+    background-color: #fefcf3; 
+}
+
+.bg-playa-purple-light { 
+    background-color: #f8f6fb; 
+}
+
+.bg-playa-teal-light { 
+    background-color: #f0f6f5; 
+}
+
+.bg-playa-navy-light { 
+    background-color: #f4f4f7; 
+}
+
+/* Colores principales para acentos */
+.bg-playa-green { 
+    background-color: #A8C686; 
+}
+
+.bg-playa-yellow { 
+    background-color: #F4C85E; 
+}
+
+.bg-playa-purple { 
+    background-color: #B8A9D9; 
+}
+
+/* 🔧 EDITA AQUÍ EL AZUL OSCURO DEL BOTÓN */
+.bg-playa-navy { 
+    background-color: #1A1A1A; /* Cambia este color por el azul oscuro de tu brandbook */
+}
+
+.bg-playa-teal { 
+    background-color: #4A9B8E; 
+}
+
+/* Colores de texto */
+.text-playa-green { 
+    color: #A8C686; 
+}
+
+.text-playa-yellow { 
+    color: #F4C85E; 
+}
+
+.text-playa-purple { 
+    color: #B8A9D9; 
+}
+
+.text-playa-navy { 
+    color: #5D5F9B; 
+}
+
+.text-playa-teal { 
+    color: #4A9B8E; 
+}
+
+/* Bordes */
+.border-playa-green { 
+    border-color: #A8C686; 
+}
+
+.border-playa-yellow { 
+    border-color: #F4C85E; 
+}
+
+.border-playa-purple { 
+    border-color: #B8A9D9; 
+}
+
+.border-playa-navy { 
+    border-color: #5D5F9B; 
+}
+
+.border-playa-teal { 
+    border-color: #4A9B8E; 
+}
+
+/* =================================
+   BOTONES PERSONALIZADOS
+   ================================= */
+
+.btn-primary {
+    background-color: #1A1A1A; /* Azul oscuro - EDITA AQUÍ */
+    color: white;
+    font-weight: bold;
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+    font-size: 1.25rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #4A9B8E; /* Teal en hover */
+    transform: translateY(-1px);
+    box-shadow: 0 8px 12px -1px rgba(0, 0, 0, 0.15);
+}
+
+/* =================================
+   UTILIDADES ADICIONALES
+   ================================= */
+
+/* Sombras suaves */
+.shadow-playa {
+    box-shadow: 0 4px 6px -1px rgba(168, 198, 134, 0.1), 
+                0 2px 4px -1px rgba(168, 198, 134, 0.06);
+}
+
+/* Transiciones suaves */
+.transition-playa {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Bordes redondeados */
+.rounded-playa {
+    border-radius: 0.75rem;
+}
+
+/* Focus personalizado */
+.focus-playa:focus {
+    outline: none;
+    ring: 2px;
+    ring-color: #4A9B8E;
+    border-color: #4A9B8E;
+}
+
+/* =================================
+   RESPONSIVE DESIGN
+   ================================= */
+
+@media (max-width: 768px) {
+    .btn-primary {
+        padding: 0.75rem 1.5rem;
+        font-size: 1.125rem;
+    }
+    
+    .font-aglet {
+        font-size: 0.95em;
+    }
+}
+
+/* =================================
+   ANIMACIONES
+   ================================= */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* =================================
+   MODO OSCURO (OPCIONAL)
+   ================================= */
+
+@media (prefers-color-scheme: dark) {
+    /* Descomenta estas líneas si quieres soporte para modo oscuro */
+    /*
+    .bg-white {
+        background-color: #1a1a1a;
+        color: white;
+    }
+    
+    .text-black {
+        color: white;
+    }
+    
+    .border-gray-100 {
+        border-color: #333;
+    }
+    */
+}
