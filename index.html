@@ -21,6 +21,22 @@
     <script src="js/config.js"></script>
 
     <script type="text/babel">
+        // ✅ MANEJO DE ERRORES MEJORADO
+        window.addEventListener('error', function(e) {
+            console.error('❌ Error JavaScript detectado:', e.error);
+            console.error('📍 Archivo:', e.filename, 'Línea:', e.lineno);
+        });
+
+        // Verificar que todas las dependencias estén cargadas
+        if (typeof React === 'undefined') {
+            console.error('❌ React no está cargado');
+            document.body.innerHTML = '<div style="text-align:center;margin-top:50px;"><h1>Error: React no está cargado</h1><p>Verifica tu conexión a internet</p></div>';
+        }
+
+        if (typeof ReactDOM === 'undefined') {
+            console.error('❌ ReactDOM no está cargado');
+        }
+
         // Iconos SVG
         const icons = {
             ChevronRight: () => (
@@ -369,8 +385,16 @@
                 const level = getLevel(score.correct);
                 
                 try {
-                    // ✅ CORREGIDO: Verificar reCAPTCHA v3 igual que en inglés
-                    if (typeof grecaptcha !== 'undefined' && RECAPTCHA_CONFIG.siteKey !== 'TU_SITE_KEY_AQUI') {
+                    // ✅ VERIFICAR que AIRTABLE_CONFIG existe
+                    if (typeof AIRTABLE_CONFIG === 'undefined') {
+                        console.error('❌ AIRTABLE_CONFIG no está definido. Verifica que config.js se cargue correctamente.');
+                        alert('Error de configuración: config.js no se cargó correctamente. Verifica que el archivo existe en js/config.js');
+                        setLoading(false);
+                        return;
+                    }
+
+                    // ✅ VERIFICAR reCAPTCHA
+                    if (typeof RECAPTCHA_CONFIG !== 'undefined' && typeof grecaptcha !== 'undefined' && RECAPTCHA_CONFIG.siteKey !== 'TU_SITE_KEY_AQUI') {
                         const recaptchaToken = await grecaptcha.execute(RECAPTCHA_CONFIG.siteKey, {action: 'submit_test'});
                         
                         if (!recaptchaToken) {
@@ -878,7 +902,50 @@
             return null;
         };
 
-        ReactDOM.render(<LevelTest />, document.getElementById('root'));
+        // ✅ VERIFICAR que todo está listo antes de renderizar
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 DOM cargado, iniciando aplicación...');
+            
+            if (!document.getElementById('root')) {
+                console.error('❌ Elemento #root no encontrado');
+                return;
+            }
+            
+            if (typeof React === 'undefined' || typeof ReactDOM === 'undefined') {
+                console.error('❌ React o ReactDOM no están disponibles');
+                return;
+            }
+            
+            try {
+                ReactDOM.render(<LevelTest />, document.getElementById('root'));
+                console.log('✅ Aplicación renderizada exitosamente');
+            } catch (error) {
+                console.error('❌ Error al renderizar la aplicación:', error);
+                document.getElementById('root').innerHTML = 
+                    '<div style="text-align:center;margin-top:50px;">' +
+                    '<h1 style="color:red;">Error al cargar el test</h1>' +
+                    '<p>Revisa la consola del navegador (F12) para más detalles</p>' +
+                    '<p>Error: ' + error.message + '</p>' +
+                    '</div>';
+            }
+        });
+
+        // ✅ FALLBACK: Si DOMContentLoaded ya pasó
+        if (document.readyState === 'loading') {
+            // DOMContentLoaded aún no se disparó
+        } else {
+            // DOMContentLoaded ya se disparó
+            setTimeout(() => {
+                if (!document.querySelector('#root').hasChildNodes()) {
+                    console.log('🔄 Intentando renderizar nuevamente...');
+                    try {
+                        ReactDOM.render(<LevelTest />, document.getElementById('root'));
+                    } catch (error) {
+                        console.error('❌ Error en fallback render:', error);
+                    }
+                }
+            }, 100);
+        }
     </script>
 </body>
 </html>
