@@ -19,7 +19,7 @@ const TRANSLATIONS = {
         startPage: {
             title: "Test de Nivel de Español",
             subtitle: "Evalúa tu nivel de español con nuestro test completo de gramática y vocabulario",
-            info: "40 preguntas • 10 minutos • Resultados inmediatos", // ✅ CORREGIDO: 10 minutos
+            info: "40 preguntas • 10 minutos • Resultados inmediatos",
             startButton: "Iniciar Test"
         },
         
@@ -66,7 +66,6 @@ const TRANSLATIONS = {
                         social: "Redes sociales", 
                         friends: "Por amigos",
                         ads: "Por anuncios",
-                        walking: "Paseando",
                         other: "De otra forma"
                     }
                 },
@@ -78,15 +77,6 @@ const TRANSLATIONS = {
                         studies: "Estudios",
                         business: "Negocios",
                         culture: "Cultura"
-                    }
-                },
-                frequency: {
-                    label: "¿Qué frecuencia de curso piensas que necesitas?",
-                    options: {
-                        placeholder: "Selecciona una opción",
-                        daily: "Clase diaria",
-                        weekly: "Una por semana",
-                        biweekly: "Dos por semana"
                     }
                 }
             },
@@ -124,8 +114,7 @@ const TRANSLATIONS = {
                 email: "Email:",
                 city: "Ciudad:",
                 howFoundUs: "Cómo nos conoció:",
-                purpose: "Propósito:",
-                frequency: "Frecuencia:"
+                purpose: "Propósito:"
             },
             successMessage: "Tus resultados han sido guardados exitosamente. Pronto recibirás más información en tu email.",
             newTestButton: "Realizar Nuevo Test"
@@ -143,7 +132,7 @@ const TRANSLATIONS = {
         startPage: {
             title: "Spanish Level Test",
             subtitle: "Evaluate your Spanish level with our complete grammar and vocabulary test",
-            info: "40 questions • 10 minutes • Instant results", // ✅ CORREGIDO: 10 minutos
+            info: "40 questions • 10 minutes • Instant results",
             startButton: "Start Test"
         },
         
@@ -190,7 +179,6 @@ const TRANSLATIONS = {
                         social: "Social media",
                         friends: "Through friends", 
                         ads: "Through ads",
-                        walking: "Walking around",
                         other: "Other way"
                     }
                 },
@@ -202,15 +190,6 @@ const TRANSLATIONS = {
                         studies: "Studies",
                         business: "Business",
                         culture: "Culture"
-                    }
-                },
-                frequency: {
-                    label: "What course frequency do you think you need?",
-                    options: {
-                        placeholder: "Select an option",
-                        daily: "Daily class",
-                        weekly: "Once a week", 
-                        biweekly: "Twice a week"
                     }
                 }
             },
@@ -248,8 +227,7 @@ const TRANSLATIONS = {
                 email: "Email:",
                 city: "City:",
                 howFoundUs: "How found us:",
-                purpose: "Purpose:",
-                frequency: "Frequency:"
+                purpose: "Purpose:"
             },
             successMessage: "Your results have been saved successfully. You will receive more information in your email soon.",
             newTestButton: "Take New Test"
