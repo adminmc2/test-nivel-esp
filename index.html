@@ -8,6 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.21.3/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 🔧 EXACTO como inglés: Script reCAPTCHA v2 con callback -->
     <script src="https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit"></script>
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Aglet+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -16,19 +17,28 @@
 <body class="font-raleway bg-white">
     <div id="root"></div>
 
+    <!-- Configuración de Airtable -->
     <script src="js/config.js"></script>
     <script src="js/languages.js"></script>
 
+    <!-- 🔧 EXACTO como inglés: Callback global para reCAPTCHA -->
     <script>
-    // Callback global para reCAPTCHA v2
-    window.onRecaptchaLoad = function() {
-        console.log('✅ reCAPTCHA v2 script loaded and ready');
-        window.recaptchaReady = true;
-        window.dispatchEvent(new CustomEvent('recaptchaReady'));
-    };
+        // Variable global para almacenar el widget ID
+        window.recaptchaWidgetId = null;
+        window.recaptchaReady = false;
+        
+        // Callback que se ejecuta cuando reCAPTCHA está listo
+        window.onRecaptchaLoad = function() {
+            console.log('✅ reCAPTCHA script loaded and ready');
+            window.recaptchaReady = true;
+            
+            // Trigger custom event para notificar a React
+            window.dispatchEvent(new CustomEvent('recaptchaReady'));
+        };
     </script>
 
     <script type="text/babel">
+        // Iconos SVG
         const icons = {
             ChevronRight: () => (
                 <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,6 +98,8 @@
             const [submitted, setSubmitted] = React.useState(false);
             const [loading, setLoading] = React.useState(false);
             const [language, setLanguage] = React.useState(getCurrentLanguage());
+            
+            // 🔧 EXACTO como inglés: Estado para manejar reCAPTCHA
             const [recaptchaLoaded, setRecaptchaLoaded] = React.useState(false);
 
             React.useEffect(() => {
@@ -100,33 +112,50 @@
                 };
             }, []);
 
+            // 🔧 EXACTO como inglés: useEffect para manejar reCAPTCHA
             React.useEffect(() => {
+                // Listener para cuando reCAPTCHA esté listo
                 const handleRecaptchaReady = () => {
+                    console.log('✅ reCAPTCHA ready event received');
                     setRecaptchaLoaded(true);
                 };
-                
+
+                // Verificar si ya está listo
                 if (window.recaptchaReady) {
                     setRecaptchaLoaded(true);
                 } else {
                     window.addEventListener('recaptchaReady', handleRecaptchaReady);
                 }
-                
+
                 return () => {
                     window.removeEventListener('recaptchaReady', handleRecaptchaReady);
                 };
             }, []);
 
+            // 🔧 EXACTO como inglés: useEffect para renderizar widget cuando llegamos al formulario
             React.useEffect(() => {
                 if (currentPage === 'studentForm' && recaptchaLoaded && !window.recaptchaWidgetId) {
-                    console.log('🔄 Renderizando widget reCAPTCHA v2...');
-                    try {
-                        window.recaptchaWidgetId = grecaptcha.render('recaptcha-container', {
-                            'sitekey': '6LdSA3orAAAAAM8tvQxUOqdHOfSp_dWZakH7uXnx'
-                        });
-                        console.log('✅ Widget reCAPTCHA renderizado con ID:', window.recaptchaWidgetId);
-                    } catch (error) {
-                        console.error('❌ Error renderizando reCAPTCHA:', error);
-                    }
+                    // Esperamos un poco para que el DOM esté listo
+                    setTimeout(() => {
+                        const recaptchaContainer = document.getElementById('recaptcha-container');
+                        if (recaptchaContainer && typeof grecaptcha !== 'undefined' && grecaptcha.render) {
+                            try {
+                                console.log('🔄 Renderizando widget reCAPTCHA...');
+                                window.recaptchaWidgetId = grecaptcha.render('recaptcha-container', {
+                                    'sitekey': '6LdSA3orAAAAAM8tvQxUOqdHOfSp_dWZakH7uXnx',
+                                    'callback': function(response) {
+                                        console.log('✅ reCAPTCHA completado:', response.substring(0, 50) + '...');
+                                    },
+                                    'expired-callback': function() {
+                                        console.log('⚠️ reCAPTCHA expirado');
+                                    }
+                                });
+                                console.log('✅ Widget reCAPTCHA renderizado con ID:', window.recaptchaWidgetId);
+                            } catch (error) {
+                                console.error('❌ Error renderizando reCAPTCHA:', error);
+                            }
+                        }
+                    }, 100);
                 }
             }, [currentPage, recaptchaLoaded]);
 
@@ -147,6 +176,7 @@
                 </div>
             );
 
+            // PREGUNTAS EN ESPAÑOL (40 preguntas del test español)
             const testQuestions = [
                 { id: 1, question: "Hola, ¿de dónde _____ vosotros?", options: ["eres", "soys", "sois", "soy"], correct: 2 },
                 { id: 2, question: "La escuela _____ muy bonita y _____ en la playa.", options: ["está -- es", "es -- está", "es - es", "está -- está"], correct: 1 },
@@ -226,34 +256,69 @@
                 return "A1";
             };
 
+            // 🔧 EXACTO como inglés: FUNCIÓN submitWithRecaptchaV2
             const submitWithRecaptchaV2 = async () => {
                 setLoading(true);
                 
-                console.log('🚀 [INICIO] Proceso de envío con reCAPTCHA v2 ESPAÑOL...');
+                console.log('═══════════════════════════════════════════════════════════════');
+                console.log('🚀 [INICIO] Proceso de envío con reCAPTCHA v2 ESPAÑOL (COPIA EXACTA INGLÉS)');
+                console.log('═══════════════════════════════════════════════════════════════');
                 
                 try {
-                    // Verificar que reCAPTCHA está marcado
-                    if (!window.recaptchaWidgetId) {
-                        alert('Error: El widget reCAPTCHA no está disponible. Recarga la página.');
+                    // PASO 1: Verificación robusta de reCAPTCHA
+                    console.log('🔐 [PASO 1] Verificando reCAPTCHA v2...');
+                    
+                    // Verificar que reCAPTCHA está disponible
+                    if (typeof grecaptcha === 'undefined') {
+                        alert('❌ reCAPTCHA no está cargado. Recarga la página.');
                         setLoading(false);
                         return;
                     }
                     
-                    const recaptchaToken = grecaptcha.getResponse(window.recaptchaWidgetId);
-                    
-                    if (!recaptchaToken) {
-                        alert('Por favor, marca la casilla "No soy un robot" antes de continuar.');
+                    // Verificar que tenemos un widget renderizado
+                    if (window.recaptchaWidgetId === null) {
+                        alert('❌ Widget reCAPTCHA no está inicializado. Recarga la página.');
+                        setLoading(false);
+                        return;
+                    }
+
+                    // Obtener respuesta del widget específico
+                    let recaptchaResponse;
+                    try {
+                        recaptchaResponse = grecaptcha.getResponse(window.recaptchaWidgetId);
+                        console.log('🔍 [DEBUG] Token completo:', recaptchaResponse);
+                        console.log('🔍 [DEBUG] Longitud token:', recaptchaResponse ? recaptchaResponse.length : 'NULL');
+                        console.log('🔍 [DEBUG] Widget ID usado:', window.recaptchaWidgetId);
+                        console.log('🔍 [DEBUG] Timestamp:', new Date().toISOString());
+                        console.log('✅ [PASO 1] Respuesta obtenida del widget ID:', window.recaptchaWidgetId);
+                    } catch (error) {
+                        console.error('❌ [ERROR] Error obteniendo respuesta reCAPTCHA:', error);
+                        alert('❌ Error: El widget reCAPTCHA no responde. Recarga la página.');
                         setLoading(false);
                         return;
                     }
                     
-                    console.log('🔐 Token reCAPTCHA v2 obtenido, longitud:', recaptchaToken.length);
+                    if (!recaptchaResponse || recaptchaResponse.trim() === '') {
+                        console.log('❌ [ERROR] Token reCAPTCHA vacío o null');
+                        alert('❌ Por favor, marca la casilla "No soy un robot" antes de continuar.');
+                        grecaptcha.reset(window.recaptchaWidgetId);
+                        setLoading(false);
+                        return;
+                    }
                     
-                    // Calcular puntuación
+                    console.log('✅ [PASO 1] reCAPTCHA v2 completado exitosamente');
+                    
+                    // PASO 2: Calcular resultados
+                    console.log('📊 [PASO 2] Calculando puntuación...');
                     const score = calculateScore();
                     const level = getLevel(score.correct);
+                    console.log('✅ [PASO 2] Puntuación calculada:', score);
+                    console.log('✅ [PASO 2] Nivel determinado:', level);
                     
-                    // Preparar respuestas detalladas
+                    // PASO 3: Preparar datos completos
+                    console.log('📦 [PASO 3] Preparando datos para envío...');
+                    
+                    // Crear objeto con respuestas detalladas
                     const detailedAnswers = {};
                     testQuestions.forEach(question => {
                         if (answers[question.id] !== undefined) {
@@ -262,61 +327,101 @@
                         }
                     });
                     
-                    // Preparar datos para envío
                     const dataToSend = {
-                        recaptchaToken: recaptchaToken,
+                        // 👤 Datos del estudiante
                         firstName: studentData.firstName,
                         lastName: studentData.lastName,
                         email: studentData.email,
-                        city: studentData.city,
-                        howFoundUs: studentData.howFoundUs,
-                        learningPurpose: studentData.learningPurpose,
+                        city: studentData.city || "",
+                        howFoundUs: studentData.howFoundUs || "",
+                        learningPurpose: studentData.learningPurpose || "",
+                        
+                        // 📊 Resultados del test
                         score: score.correct,
+                        total: score.total,
                         percentage: score.percentage,
                         level: level,
-                        detailedAnswers: JSON.stringify(detailedAnswers, null, 2)
+                        
+                        // 🔍 Datos adicionales PARA ESPAÑOL
+                        testType: "Test de nivel español",
+                        language: "Español",
+                        detailedAnswers: JSON.stringify(detailedAnswers, null, 2),
+                        
+                        // 🔐 Token reCAPTCHA
+                        recaptchaToken: recaptchaResponse
                     };
                     
-                    console.log('📤 Enviando datos a función Netlify ESPAÑOL...');
+                    console.log('✅ [PASO 3] Datos preparados correctamente');
                     
-                    // Enviar a función Netlify
-                    const response = await fetch('/.netlify/functions/verify-and-save', {
+                    // PASO 4: Enviar a función Netlify
+                    console.log('🌐 [PASO 4] Enviando a función Netlify ESPAÑOL...');
+                    const netlifyUrl = '/.netlify/functions/verify-and-save';
+                    
+                    const response = await fetch(netlifyUrl, {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
                         },
                         body: JSON.stringify(dataToSend)
                     });
                     
-                    console.log('📥 Response status:', response.status);
+                    console.log('📥 [PASO 4] Response recibido:', response.status, response.statusText);
                     
+                    // PASO 5: Procesar respuesta
                     if (response.ok) {
-                        const result = await response.json();
-                        console.log('✅ Datos guardados exitosamente:', result);
+                        const responseData = await response.json();
+                        console.log('✅ [ÉXITO] ¡Datos guardados exitosamente!', responseData);
                         
+                        // Resetear reCAPTCHA para próximo uso
+                        try {
+                            grecaptcha.reset(window.recaptchaWidgetId);
+                            console.log('✅ reCAPTCHA reseteado exitosamente');
+                        } catch (resetError) {
+                            console.log('⚠️ Warning al resetear reCAPTCHA:', resetError.message);
+                        }
+                        
+                        // Ir a resultados
                         setSubmitted(true);
                         setCurrentPage('results');
                         
+                        console.log('🎉 [ÉXITO] Proceso completado - usuario redirigido a resultados');
+                        
                     } else {
-                        const errorData = await response.json();
-                        console.error('❌ Error del servidor:', errorData);
+                        const responseText = await response.text();
+                        console.log('❌ [ERROR] Response no OK:', responseText);
                         
-                        alert(`Error: ${errorData.error}\n\nRevisa la consola para más detalles.`);
+                        try {
+                            const errorData = JSON.parse(responseText);
+                            alert(`❌ Error: ${errorData.error}\n\nRevisa la consola para más detalles.`);
+                        } catch (parseError) {
+                            alert(`❌ Error del servidor (Status: ${response.status})\nRevisa la consola para más detalles.`);
+                        }
                         
-                        // Resetear reCAPTCHA para permitir nuevo intento
-                        grecaptcha.reset(window.recaptchaWidgetId);
+                        // Resetear reCAPTCHA para reintentar
+                        try {
+                            grecaptcha.reset(window.recaptchaWidgetId);
+                        } catch (resetError) {
+                            console.log('⚠️ Warning al resetear reCAPTCHA:', resetError.message);
+                        }
                     }
                     
                 } catch (error) {
-                    console.error('💥 Error crítico:', error);
-                    alert(`Error de conexión: ${error.message}`);
+                    console.log('💥 [ERROR CRÍTICO]:', error);
+                    alert(`💥 Error crítico: ${error.message}\n\nRevisa la consola para más detalles.`);
                     
-                    // Resetear reCAPTCHA
-                    if (window.recaptchaWidgetId) {
-                        grecaptcha.reset(window.recaptchaWidgetId);
+                    // Resetear reCAPTCHA en caso de error
+                    try {
+                        if (window.recaptchaWidgetId !== null) {
+                            grecaptcha.reset(window.recaptchaWidgetId);
+                        }
+                    } catch (resetError) {
+                        console.log('❌ Error al resetear reCAPTCHA:', resetError.message);
                     }
+                    
                 } finally {
+                    console.log('🏁 [FINAL] Finalizando proceso...');
                     setLoading(false);
+                    console.log('═══════════════════════════════════════════════════════════════');
                 }
             };
 
@@ -338,6 +443,7 @@
                 }
             };
 
+            // Página de inicio
             if (currentPage === 'start') {
                 return (
                     <div className="min-h-screen bg-playa-purple-light flex items-center justify-center p-4 pt-8">
@@ -384,6 +490,7 @@
                 );
             }
 
+            // Páginas de preguntas
             const questionPage = testQuestions.find(q => q.id.toString() === currentPage);
             if (questionPage) {
                 const progress = (questionPage.id / testQuestions.length) * 100;
@@ -391,6 +498,7 @@
                 return (
                     <div className="min-h-screen bg-playa-purple-light p-4 pt-8">
                         <div className="max-w-4xl mx-auto">
+                            {/* Header solo con logo */}
                             <div className="text-center mb-8 bg-white rounded-xl p-4 shadow-sm border border-gray-100">
                                 <img 
                                     src="images/hablandis.svg" 
@@ -402,6 +510,7 @@
                                 />
                             </div>
 
+                            {/* Barra de progreso */}
                             <div className="bg-white rounded-xl p-6 mb-6 shadow-sm border border-gray-100">
                                 <div className="flex justify-between items-center mb-3">
                                     <span className="font-aglet text-sm font-medium text-black">
@@ -419,6 +528,7 @@
                                 </div>
                             </div>
 
+                            {/* Pregunta */}
                             <div className="bg-white rounded-xl shadow-sm p-8 border border-gray-100">
                                 <h2 className="font-aglet text-2xl font-bold text-black mb-8">
                                     {questionPage.question}
@@ -449,6 +559,7 @@
                                     ))}
                                 </div>
 
+                                {/* Navegación */}
                                 <div className="flex justify-between">
                                     <button
                                         onClick={prevQuestion}
@@ -477,10 +588,12 @@
                 );
             }
 
+            // Formulario de datos del estudiante
             if (currentPage === 'studentForm') {
                 return (
                     <div className="min-h-screen bg-playa-yellow-light p-4 pt-8">
                         <div className="max-w-2xl mx-auto">
+                            {/* Header solo con logo */}
                             <div className="text-center mb-6 bg-white rounded-xl p-4 shadow-sm border border-gray-100">
                                 <img 
                                     src="images/hablandis.svg" 
@@ -614,20 +727,15 @@
                                         </div>
                                     </div>
 
+                                    {/* 🔧 EXACTO como inglés: WIDGET RECAPTCHA */}
                                     <div className="flex justify-center mb-6">
                                         <div id="recaptcha-container" className="min-h-[78px] flex items-center justify-center">
                                             {!recaptchaLoaded && (
-                                                <div className="text-gray-500 font-raleway">Cargando verificación...</div>
+                                                <div className="text-gray-500 font-raleway">
+                                                    Cargando verificación...
+                                                </div>
                                             )}
                                         </div>
-                                    </div>
-
-                                    <div className="text-center">
-                                        <p className="text-xs text-gray-500 font-raleway">
-                                            🛡️ {t('studentForm.recaptcha.text')}<br/>
-                                            <a href="https://policies.google.com/privacy" target="_blank" className="text-playa-purple hover:underline">{t('studentForm.recaptcha.privacy')}</a> y 
-                                            <a href="https://policies.google.com/terms" target="_blank" className="text-playa-purple hover:underline ml-1">{t('studentForm.recaptcha.terms')}</a>
-                                        </p>
                                     </div>
                                 </div>
 
@@ -642,9 +750,9 @@
                                     
                                     <button
                                         onClick={submitWithRecaptchaV2}
-                                        disabled={!studentData.firstName || !studentData.lastName || !studentData.email || !studentData.dataProtection || loading}
+                                        disabled={!studentData.firstName || !studentData.lastName || !studentData.email || !studentData.dataProtection || loading || !recaptchaLoaded}
                                         className={`flex items-center gap-2 px-8 py-3 rounded-lg transition-all duration-200 font-aglet ${
-                                            studentData.firstName && studentData.lastName && studentData.email && studentData.dataProtection && !loading
+                                            studentData.firstName && studentData.lastName && studentData.email && studentData.dataProtection && !loading && recaptchaLoaded
                                                 ? 'bg-playa-purple hover:bg-playa-teal text-white'
                                                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                         }`}
@@ -668,6 +776,7 @@
                 );
             }
 
+            // Página de resultados
             if (currentPage === 'results') {
                 const score = calculateScore();
                 const level = getLevel(score.correct);
@@ -675,6 +784,7 @@
                 return (
                     <div className="min-h-screen bg-playa-purple-light p-4 pt-8">
                         <div className="max-w-2xl mx-auto">
+                            {/* Header solo con logo */}
                             <div className="text-center mb-6 bg-white rounded-xl p-4 shadow-sm border border-gray-100">
                                 <img 
                                     src="images/hablandis.svg" 
@@ -731,6 +841,8 @@
                                             howFoundUs: '', learningPurpose: '', dataProtection: false
                                         });
                                         setSubmitted(false);
+                                        // Reset reCAPTCHA state
+                                        window.recaptchaWidgetId = null;
                                     }}
                                     className="bg-playa-purple hover:bg-playa-navy text-white font-bold py-4 px-8 rounded-lg transition-all duration-200 font-aglet"
                                 >
