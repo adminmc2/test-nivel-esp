@@ -4,100 +4,24 @@
 
 /**
  * Configuración para conectar con Airtable
- * 
- * INSTRUCCIONES AIRTABLE:
- * 1. Ve a https://airtable.com/api
- * 2. Selecciona tu base de datos
- * 3. Copia los valores necesarios:
- *    - API Token: Ve a Account > Developer hub > Personal access tokens
- *    - Base ID: Aparece en la URL de la API (empieza con 'app')
- *    - Table Name: El nombre exacto de tu tabla
  */
 
 const AIRTABLE_CONFIG = {
-    // 🔧 EDITA ESTOS VALORES CON TUS DATOS DE AIRTABLE
-    apiToken: 'patySknPPBjipirTG.5eb66357ee49c95daad4046b60ac6fc70009d66804e65963bdb4d7ad02c90a2f',        // Ej: 'patXXXXXXXXXXXXXX.XXXXXXXXXXXXXXX'
-    baseId: 'appvXqjRdinq686ey',           // Ej: 'appXXXXXXXXXXXXXX' 
-    tableName: 'Resultados de Test de Nivel'           // Ej: 'Resultados Test' o 'Test Results'
+    // 🔧 MISMOS DATOS QUE INGLÉS (YA FUNCIONAN)
+    apiToken: 'patySknPPBjipirTG.5eb66357ee49c95daad4046b60ac6fc70009d66804e65963bdb4d7ad02c90a2f',
+    baseId: 'appvXqjRdinq686ey',
+    tableName: 'Resultados de Test de Nivel'
 };
 
 // =================================
-// 🔧 CONFIGURACIÓN RÁPIDA - EDITA AQUÍ
+// 🔧 CONFIGURACIÓN reCAPTCHA v2 - USANDO SITE KEY QUE FUNCIONA
 // =================================
-
-/**
- * ⭐ INSTRUCCIONES RÁPIDAS:
- * 
- * 1️⃣ AIRTABLE:
- *    - Ve a https://airtable.com/api
- *    - Copia tu API Token, Base ID y Table Name
- *    - Pégalos en AIRTABLE_CONFIG arriba
- * 
- * 2️⃣ RECAPTCHA:
- *    - Ve a https://www.google.com/recaptcha/admin
- *    - Crea sitio reCAPTCHA v3
- *    - Copia SOLO la "Site Key" (no la Secret Key)
- *    - Pégala en RECAPTCHA_CONFIG arriba
- *    - TAMBIÉN actualiza index.html línea 12
- * 
- * 3️⃣ EJEMPLO DE CONFIGURACIÓN COMPLETA:
- * 
- * const AIRTABLE_CONFIG = {
- *     apiToken: 'patABC123.DEF456GHI789JKL012MNO345PQR678STU901VWX234',
- *     baseId: 'appABC123DEF456GH',
- *     tableName: 'Resultados Test'
- * };
- * 
- * const RECAPTCHA_CONFIG = {
- *     siteKey: '6LdABC123DEF456GHI789JKL012MNO345PQR678STU',
- *     action: 'submit_test'
- * };
- * 
- * Y en index.html línea 12:
- * <script src="...api.js?render=6LdABC123DEF456GHI789JKL012MNO345PQR678STU"></script>
- */
 
 const RECAPTCHA_CONFIG = {
-    // 🔧 ⭐ REEMPLAZA ESTA LÍNEA CON TU SITE KEY REAL DE GOOGLE RECAPTCHA ⭐
-    siteKey: '6LcqmngrAAAAADrOlsQ_WWUZ9oOu-BZtnG6yki8z',         // Ej: '6LdXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
-    // 
-    // 📋 PASOS PARA OBTENER TU SITE KEY:
-    // 1. Ve a: https://www.google.com/recaptcha/admin
-    // 2. Crea un sitio reCAPTCHA v3
-    // 3. Copia SOLO la "Site Key" (NO la "Secret Key")
-    // 4. Pégala arriba reemplazando 'TU_SITE_KEY_AQUI'
-    // 5. TAMBIÉN actualiza el index.html línea 12 con la misma Site Key
-    //
-    action: 'submit_test'                // No cambies esto
+    // 🔧 ⭐ SITE KEY QUE YA FUNCIONA EN INGLÉS ⭐
+    siteKey: '6LdSA3orAAAAAM8tvQxUOqdHOfSp_dWZakH7uXnx',  // CAMBIADO: era 6LcqmngrAAAAADrOlsQ_WWUZ9oOu-BZtnG6yki8z
+    action: 'submit_test'
 };
-
-// =================================
-// CAMPOS QUE SE GUARDARÁN EN AIRTABLE
-// =================================
-
-/**
- * Estructura de datos que se envía a Airtable (ACTUALIZADA):
- * 
- * - Nombre del estudiante: Nombre del estudiante
- * - Apellidos del estudiante: Apellidos del estudiante
- * - Email: Email del estudiante
- * - Ciudad: Ciudad (opcional)
- * - Puntuación: Número de respuestas correctas
- * - Total Preguntas: Total de preguntas del test (40)
- * - Porcentaje: Porcentaje de aciertos
- * - Nivel CEFR: Nivel CEFR (A1, A2, B1, B2)
- * - Fecha de realización: Fecha de realización del test
- * - Canal de adquisición: Cómo nos conoció (sin "Paseando")
- * - Propósito: Para qué necesita aprender español
- * - Protección Datos: Aceptación de cláusula de protección de datos
- * - Respuestas detalladas: JSON con todas las respuestas del test
- * - Verificado reCAPTCHA: Indica si pasó la verificación de reCAPTCHA
- * - Idioma: "Español" (para distinguir del test de inglés)
- * - Tipo de test de nivel: "Test de nivel español"
- * 
- * CAMPOS ELIMINADOS:
- * - Frecuencia de curso: ❌ YA NO SE GUARDA
- */
 
 // =================================
 // CONFIGURACIÓN ADICIONAL
@@ -170,11 +94,11 @@ function validateAllConfigs() {
 }
 
 // =================================
-// FUNCIÓN PARA VERIFICAR RECAPTCHA
+// FUNCIÓN PARA VERIFICAR RECAPTCHA v2 - NUEVA
 // =================================
 
 /**
- * Ejecuta la verificación de reCAPTCHA v3
+ * Ejecuta la verificación de reCAPTCHA v2
  * @returns {Promise<string|null>} Token de reCAPTCHA o null si falla
  */
 async function executeRecaptcha() {
@@ -189,20 +113,25 @@ async function executeRecaptcha() {
             return null;
         }
         
-        logDebug('🔄 Ejecutando reCAPTCHA...');
-        const token = await grecaptcha.execute(RECAPTCHA_CONFIG.siteKey, {
-            action: RECAPTCHA_CONFIG.action
-        });
+        // Para reCAPTCHA v2, usamos getResponse() en lugar de execute()
+        logDebug('🔄 Obteniendo respuesta reCAPTCHA v2...');
         
-        if (token) {
-            logDebug('✅ reCAPTCHA token generado exitosamente');
-            return token;
+        if (window.recaptchaWidgetId !== undefined) {
+            const token = grecaptcha.getResponse(window.recaptchaWidgetId);
+            
+            if (token) {
+                logDebug('✅ reCAPTCHA v2 token obtenido exitosamente');
+                return token;
+            } else {
+                logDebug('❌ Usuario no completó reCAPTCHA v2');
+                return null;
+            }
         } else {
-            logDebug('❌ No se pudo generar el token de reCAPTCHA');
+            logDebug('❌ Widget reCAPTCHA v2 no está renderizado');
             return null;
         }
     } catch (error) {
-        console.error('❌ Error en reCAPTCHA:', error);
+        console.error('❌ Error en reCAPTCHA v2:', error);
         return null;
     }
 }
@@ -213,7 +142,7 @@ async function executeRecaptcha() {
 
 // Validar configuraciones al cargar la página
 document.addEventListener('DOMContentLoaded', function() {
-    logDebug('🚀 Inicializando configuraciones...');
+    logDebug('🚀 Inicializando configuraciones ESPAÑOL...');
     
     const validation = validateAllConfigs();
     
@@ -222,76 +151,22 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.warn('⚠️ Hay configuraciones incompletas. Revisa la consola para más detalles.');
     }
-    
-    // Esperar a que reCAPTCHA se cargue completamente
-    if (window.grecaptcha) {
-        grecaptcha.ready(() => {
-            logDebug('✅ reCAPTCHA está listo');
-        });
-    }
 });
 
 // =================================
-// EJEMPLO DE ESTRUCTURA DE TABLA AIRTABLE ACTUALIZADA
+// CONFIGURACIÓN reCAPTCHA v2 CALLBACK
 // =================================
 
-/**
- * Crea una tabla en Airtable con estos campos EXACTOS (ACTUALIZADA):
- * 
- * Nombre del estudiante: Single line text
- * Apellidos del estudiante: Single line text
- * Email: Email
- * Ciudad: Single line text
- * Puntuación: Number
- * Porcentaje: Number
- * Nivel CEFR: Single select (A1, A2, B1, B2)
- * Fecha de realización: Date
- * Canal de adquisición: Single select (Búsqueda en navegador, Redes sociales, Por amigos, Por anuncios, De otra forma)
- * Propósito: Single select (Trabajo, Estudios, Negocios, Cultura)
- * Respuestas detalladas: Long text
- * Tipo de test de nivel: Single line text
- * Idioma: Single line text
- * 
- * CAMPOS ELIMINADOS (NO crear en Airtable):
- * ❌ Frecuencia de curso
- * ❌ Total Preguntas (simplificado)
- * ❌ Protección Datos (simplificado)
- * ❌ Verificado reCAPTCHA (simplificado)
- */
+// Callback global para reCAPTCHA v2
+window.onRecaptchaLoad = function() {
+    console.log('✅ reCAPTCHA v2 script loaded and ready');
+    window.recaptchaReady = true;
+    window.dispatchEvent(new CustomEvent('recaptchaReady'));
+};
 
 // =================================
-// EXPORTAR CONFIGURACIONES (para uso en otros archivos si es necesario)
+// EXPORTAR CONFIGURACIONES
 // =================================
 
 // Las configuraciones están disponibles globalmente
 // AIRTABLE_CONFIG, RECAPTCHA_CONFIG, executeRecaptcha(), validateAllConfigs()
-
-// =================================
-// 📋 LISTA DE VERIFICACIÓN FINAL ACTUALIZADA
-// =================================
-
-/**
- * ✅ ANTES DE USAR ESTE TEST, VERIFICA QUE HAYAS:
- * 
- * 1. ✅ Configurado AIRTABLE_CONFIG con tus datos reales
- * 2. ✅ Configurado RECAPTCHA_CONFIG con tu Site Key real  
- * 3. ✅ Actualizado index.html línea 12 con la misma Site Key
- * 4. ✅ Creado la tabla en Airtable con los campos exactos del ejemplo (SIN frecuencia)
- * 5. ✅ Probado que no hay errores en la consola del navegador (F12)
- * 
- * 🔍 PARA VERIFICAR:
- * - Abre tu sitio web
- * - Presiona F12 para abrir la consola
- * - Deberías ver: "✅ Todas las configuraciones están completas"
- * - Si ves errores, revisa los pasos anteriores
- * 
- * 📞 Si hay problemas:
- * - Revisa que las claves sean correctas
- * - Verifica que los nombres de campos en Airtable coincidan exactamente
- * - Asegúrate de tener permisos de escritura en Airtable
- * 
- * 🆕 CAMBIOS RECIENTES:
- * - Eliminada opción "Paseando" de canal de adquisición
- * - Eliminada pregunta "Frecuencia de curso" completamente
- * - Formulario más corto y directo
- */
