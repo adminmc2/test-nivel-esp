@@ -8,7 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.21.3/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://www.google.com/recaptcha/api.js?render=6LcqmngrAAAAADrOlsQ_WWUZ9oOu-BZtnG6yki8z"></script>
+    <script src="https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit"></script>
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Aglet+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
@@ -18,6 +18,15 @@
 
     <script src="js/config.js"></script>
     <script src="js/languages.js"></script>
+
+    <script>
+    // Callback global para reCAPTCHA v2
+    window.onRecaptchaLoad = function() {
+        console.log('✅ reCAPTCHA v2 script loaded and ready');
+        window.recaptchaReady = true;
+        window.dispatchEvent(new CustomEvent('recaptchaReady'));
+    };
+    </script>
 
     <script type="text/babel">
         const icons = {
@@ -79,6 +88,7 @@
             const [submitted, setSubmitted] = React.useState(false);
             const [loading, setLoading] = React.useState(false);
             const [language, setLanguage] = React.useState(getCurrentLanguage());
+            const [recaptchaLoaded, setRecaptchaLoaded] = React.useState(false);
 
             React.useEffect(() => {
                 window.updatePageContent = () => {
@@ -89,6 +99,36 @@
                     delete window.updatePageContent;
                 };
             }, []);
+
+            React.useEffect(() => {
+                const handleRecaptchaReady = () => {
+                    setRecaptchaLoaded(true);
+                };
+                
+                if (window.recaptchaReady) {
+                    setRecaptchaLoaded(true);
+                } else {
+                    window.addEventListener('recaptchaReady', handleRecaptchaReady);
+                }
+                
+                return () => {
+                    window.removeEventListener('recaptchaReady', handleRecaptchaReady);
+                };
+            }, []);
+
+            React.useEffect(() => {
+                if (currentPage === 'studentForm' && recaptchaLoaded && !window.recaptchaWidgetId) {
+                    console.log('🔄 Renderizando widget reCAPTCHA v2...');
+                    try {
+                        window.recaptchaWidgetId = grecaptcha.render('recaptcha-container', {
+                            'sitekey': '6LdSA3orAAAAAM8tvQxUOqdHOfSp_dWZakH7uXnx'
+                        });
+                        console.log('✅ Widget reCAPTCHA renderizado con ID:', window.recaptchaWidgetId);
+                    } catch (error) {
+                        console.error('❌ Error renderizando reCAPTCHA:', error);
+                    }
+                }
+            }, [currentPage, recaptchaLoaded]);
 
             const LanguageSelector = () => (
                 <div className="language-selector">
@@ -186,36 +226,34 @@
                 return "A1";
             };
 
-            const submitToAirtable = async () => {
+            const submitWithRecaptchaV2 = async () => {
                 setLoading(true);
                 
-                console.log('═══════════════════════════════════════════════════════════════');
-                console.log('🚀 [INICIO] Proceso de envío a Airtable');
-                console.log('═══════════════════════════════════════════════════════════════');
+                console.log('🚀 [INICIO] Proceso de envío con reCAPTCHA v2 ESPAÑOL...');
                 
                 try {
-                    console.log('📊 [PASO 1] Calculando puntuación...');
+                    // Verificar que reCAPTCHA está marcado
+                    if (!window.recaptchaWidgetId) {
+                        alert('Error: El widget reCAPTCHA no está disponible. Recarga la página.');
+                        setLoading(false);
+                        return;
+                    }
+                    
+                    const recaptchaToken = grecaptcha.getResponse(window.recaptchaWidgetId);
+                    
+                    if (!recaptchaToken) {
+                        alert('Por favor, marca la casilla "No soy un robot" antes de continuar.');
+                        setLoading(false);
+                        return;
+                    }
+                    
+                    console.log('🔐 Token reCAPTCHA v2 obtenido, longitud:', recaptchaToken.length);
+                    
+                    // Calcular puntuación
                     const score = calculateScore();
                     const level = getLevel(score.correct);
-                    console.log('✅ [PASO 1] Puntuación calculada:', score);
-                    console.log('✅ [PASO 1] Nivel determinado:', level);
                     
-                    console.log('👤 [PASO 2] Validando datos del estudiante...');
-                    console.log('   - Nombre:', studentData.firstName);
-                    console.log('   - Apellidos:', studentData.lastName);
-                    console.log('   - Email:', studentData.email);
-                    console.log('   - Ciudad:', studentData.city);
-                    console.log('   - Canal adquisición:', studentData.howFoundUs);
-                    console.log('   - Propósito:', studentData.learningPurpose);
-                    console.log('   - Protección datos:', studentData.dataProtection);
-                    
-                    console.log('⚙️ [PASO 3] Validando configuración Airtable...');
-                    console.log('   - Base ID:', AIRTABLE_CONFIG.baseId);
-                    console.log('   - Tabla:', AIRTABLE_CONFIG.tableName);
-                    console.log('   - Token presente:', AIRTABLE_CONFIG.apiToken ? 'SÍ (longitud: ' + AIRTABLE_CONFIG.apiToken.length + ')' : 'NO');
-                    
-                    console.log('📦 [PASO 4] Preparando datos para envío...');
-                    
+                    // Preparar respuestas detalladas
                     const detailedAnswers = {};
                     testQuestions.forEach(question => {
                         if (answers[question.id] !== undefined) {
@@ -224,105 +262,61 @@
                         }
                     });
                     
+                    // Preparar datos para envío
                     const dataToSend = {
-                        records: [{
-                            fields: {
-                                "Nombre del estudiante": studentData.firstName,
-                                "Apellidos del estudiante": studentData.lastName,
-                                "Email": studentData.email,
-                                "Ciudad": studentData.city || "",
-                                "Canal de adquisición": studentData.howFoundUs || "",
-                                "Propósito": studentData.learningPurpose || "",
-                                "Tipo de test de nivel": "Test de nivel español",
-                                "Idioma": "Español",
-                                "Puntuación": score.correct,
-                                "Porcentaje": score.percentage,
-                                "Nivel CEFR": level,
-                                "Fecha de realización": new Date().toISOString().split('T')[0],
-                                "Respuestas detalladas": JSON.stringify(detailedAnswers, null, 2)
-                            }
-                        }]
+                        recaptchaToken: recaptchaToken,
+                        firstName: studentData.firstName,
+                        lastName: studentData.lastName,
+                        email: studentData.email,
+                        city: studentData.city,
+                        howFoundUs: studentData.howFoundUs,
+                        learningPurpose: studentData.learningPurpose,
+                        score: score.correct,
+                        percentage: score.percentage,
+                        level: level,
+                        detailedAnswers: JSON.stringify(detailedAnswers, null, 2)
                     };
                     
-                    console.log('✅ [PASO 4] Datos preparados:');
-                    console.log('   - Número de registros:', dataToSend.records.length);
-                    console.log('   - Número de campos:', Object.keys(dataToSend.records[0].fields).length);
-                    console.log('   - Campos enviados:', Object.keys(dataToSend.records[0].fields));
-                    console.log('📋 [PASO 4] JSON completo a enviar:');
-                    console.log(JSON.stringify(dataToSend, null, 2));
+                    console.log('📤 Enviando datos a función Netlify ESPAÑOL...');
                     
-                    console.log('🌐 [PASO 5] Preparando request HTTP...');
-                    const url = `https://api.airtable.com/v0/${AIRTABLE_CONFIG.baseId}/${AIRTABLE_CONFIG.tableName}`;
-                    console.log('   - URL completa:', url);
-                    console.log('   - Método: POST');
-                    console.log('   - Content-Type: application/json');
-                    console.log('   - Authorization: Bearer [TOKEN_PRESENTE]');
-                    
-                    console.log('📡 [PASO 6] Enviando request a Airtable...');
-                    const response = await fetch(url, {
+                    // Enviar a función Netlify
+                    const response = await fetch('/.netlify/functions/verify-and-save', {
                         method: 'POST',
                         headers: {
-                            'Authorization': `Bearer ${AIRTABLE_CONFIG.apiToken}`,
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify(dataToSend)
                     });
                     
-                    console.log('📥 [PASO 6] Response recibido:');
-                    console.log('   - Status:', response.status);
-                    console.log('   - Status Text:', response.statusText);
-                    console.log('   - OK:', response.ok);
-                    console.log('   - Headers:', [...response.headers.entries()]);
-                    
-                    console.log('🔍 [PASO 7] Procesando respuesta...');
+                    console.log('📥 Response status:', response.status);
                     
                     if (response.ok) {
-                        const responseData = await response.json();
-                        console.log('✅ [ÉXITO] ¡Datos guardados exitosamente!');
-                        console.log('   - Datos completos de respuesta:', responseData);
-                        console.log('   - Record ID creado:', responseData.records?.[0]?.id || 'No disponible');
-                        console.log('   - Timestamp:', new Date().toISOString());
+                        const result = await response.json();
+                        console.log('✅ Datos guardados exitosamente:', result);
                         
                         setSubmitted(true);
                         setCurrentPage('results');
                         
-                        console.log('🎉 [ÉXITO] Proceso completado - usuario redirigido a resultados');
-                        
                     } else {
-                        console.log('❌ [ERROR] Response no OK - procesando error...');
-                        const responseText = await response.text();
-                        console.log('📄 [ERROR] Response text completo:', responseText);
+                        const errorData = await response.json();
+                        console.error('❌ Error del servidor:', errorData);
                         
-                        try {
-                            const errorData = JSON.parse(responseText);
-                            console.log('❌ [ERROR] Error JSON parseado:', errorData);
-                            console.log('   - Tipo de error:', errorData.error?.type);
-                            console.log('   - Mensaje:', errorData.error?.message);
-                            console.log('   - Detalles completos:', errorData);
-                            
-                            if (errorData.error && errorData.error.message) {
-                                alert(`❌ Error específico de Airtable:\n\nTipo: ${errorData.error.type}\nMensaje: ${errorData.error.message}\n\nRevisa la consola para más detalles.`);
-                            } else {
-                                alert('❌ Error al guardar los datos. Revisa la consola para ver los detalles completos.');
-                            }
-                        } catch (parseError) {
-                            console.log('❌ [ERROR] No se pudo parsear respuesta como JSON:', parseError);
-                            console.log('📄 [ERROR] Respuesta cruda:', responseText);
-                            alert(`❌ Error de servidor. Status: ${response.status}\nRevisa la consola para más detalles.`);
-                        }
+                        alert(`Error: ${errorData.error}\n\nRevisa la consola para más detalles.`);
+                        
+                        // Resetear reCAPTCHA para permitir nuevo intento
+                        grecaptcha.reset(window.recaptchaWidgetId);
                     }
+                    
                 } catch (error) {
-                    console.log('💥 [ERROR CRÍTICO] Error en try/catch principal:');
-                    console.log('   - Nombre:', error.name);
-                    console.log('   - Mensaje:', error.message);
-                    console.log('   - Stack:', error.stack);
-                    alert(`💥 Error de conexión crítico:\n${error.message}\n\nRevisa la consola para más detalles.`);
+                    console.error('💥 Error crítico:', error);
+                    alert(`Error de conexión: ${error.message}`);
+                    
+                    // Resetear reCAPTCHA
+                    if (window.recaptchaWidgetId) {
+                        grecaptcha.reset(window.recaptchaWidgetId);
+                    }
                 } finally {
-                    console.log('🏁 [FINAL] Finalizando proceso...');
                     setLoading(false);
-                    console.log('═══════════════════════════════════════════════════════════════');
-                    console.log('🏁 [FIN] Proceso de envío a Airtable completado');
-                    console.log('═══════════════════════════════════════════════════════════════');
                 }
             };
 
@@ -620,6 +614,14 @@
                                         </div>
                                     </div>
 
+                                    <div className="flex justify-center mb-6">
+                                        <div id="recaptcha-container" className="min-h-[78px] flex items-center justify-center">
+                                            {!recaptchaLoaded && (
+                                                <div className="text-gray-500 font-raleway">Cargando verificación...</div>
+                                            )}
+                                        </div>
+                                    </div>
+
                                     <div className="text-center">
                                         <p className="text-xs text-gray-500 font-raleway">
                                             🛡️ {t('studentForm.recaptcha.text')}<br/>
@@ -639,7 +641,7 @@
                                     </button>
                                     
                                     <button
-                                        onClick={submitToAirtable}
+                                        onClick={submitWithRecaptchaV2}
                                         disabled={!studentData.firstName || !studentData.lastName || !studentData.email || !studentData.dataProtection || loading}
                                         className={`flex items-center gap-2 px-8 py-3 rounded-lg transition-all duration-200 font-aglet ${
                                             studentData.firstName && studentData.lastName && studentData.email && studentData.dataProtection && !loading
