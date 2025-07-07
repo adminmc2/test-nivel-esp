@@ -8,7 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.21.3/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 🔧 EXACTO como inglés: Script reCAPTCHA v2 con callback -->
+    <!-- 🔧 reCAPTCHA v2 con callback -->
     <script src="https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit"></script>
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Aglet+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -21,7 +21,7 @@
     <script src="js/config.js"></script>
     <script src="js/languages.js"></script>
 
-    <!-- 🔧 EXACTO como inglés: Callback global para reCAPTCHA -->
+    <!-- 🔧 Callback global para reCAPTCHA -->
     <script>
         // Variable global para almacenar el widget ID
         window.recaptchaWidgetId = null;
@@ -29,7 +29,7 @@
         
         // Callback que se ejecuta cuando reCAPTCHA está listo
         window.onRecaptchaLoad = function() {
-            console.log('✅ reCAPTCHA script loaded and ready');
+            console.log('✅ reCAPTCHA v2 script loaded and ready');
             window.recaptchaReady = true;
             
             // Trigger custom event para notificar a React
@@ -80,8 +80,111 @@
                 <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
+            ),
+            Globe: () => (
+                <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
             )
         };
+
+        // 🆕 Lista de países en inglés (igual que en Airtable)
+        const COUNTRIES = [
+            { value: "Afghanistan", label: "Afghanistan" },
+            { value: "Albania", label: "Albania" },
+            { value: "Algeria", label: "Algeria" },
+            { value: "Argentina", label: "Argentina" },
+            { value: "Armenia", label: "Armenia" },
+            { value: "Australia", label: "Australia" },
+            { value: "Austria", label: "Austria" },
+            { value: "Azerbaijan", label: "Azerbaijan" },
+            { value: "Bahrain", label: "Bahrain" },
+            { value: "Bangladesh", label: "Bangladesh" },
+            { value: "Belarus", label: "Belarus" },
+            { value: "Belgium", label: "Belgium" },
+            { value: "Bolivia", label: "Bolivia" },
+            { value: "Bosnia and Herzegovina", label: "Bosnia and Herzegovina" },
+            { value: "Brazil", label: "Brazil" },
+            { value: "Bulgaria", label: "Bulgaria" },
+            { value: "Cambodia", label: "Cambodia" },
+            { value: "Canada", label: "Canada" },
+            { value: "Chile", label: "Chile" },
+            { value: "China", label: "China" },
+            { value: "Colombia", label: "Colombia" },
+            { value: "Costa Rica", label: "Costa Rica" },
+            { value: "Croatia", label: "Croatia" },
+            { value: "Czech Republic", label: "Czech Republic" },
+            { value: "Denmark", label: "Denmark" },
+            { value: "Dominican Republic", label: "Dominican Republic" },
+            { value: "Ecuador", label: "Ecuador" },
+            { value: "Egypt", label: "Egypt" },
+            { value: "El Salvador", label: "El Salvador" },
+            { value: "Estonia", label: "Estonia" },
+            { value: "Finland", label: "Finland" },
+            { value: "France", label: "France" },
+            { value: "Georgia", label: "Georgia" },
+            { value: "Germany", label: "Germany" },
+            { value: "Ghana", label: "Ghana" },
+            { value: "Greece", label: "Greece" },
+            { value: "Guatemala", label: "Guatemala" },
+            { value: "Honduras", label: "Honduras" },
+            { value: "Hungary", label: "Hungary" },
+            { value: "Iceland", label: "Iceland" },
+            { value: "India", label: "India" },
+            { value: "Indonesia", label: "Indonesia" },
+            { value: "Iran", label: "Iran" },
+            { value: "Iraq", label: "Iraq" },
+            { value: "Ireland", label: "Ireland" },
+            { value: "Israel", label: "Israel" },
+            { value: "Italy", label: "Italy" },
+            { value: "Japan", label: "Japan" },
+            { value: "Jordan", label: "Jordan" },
+            { value: "Kazakhstan", label: "Kazakhstan" },
+            { value: "Kenya", label: "Kenya" },
+            { value: "Kuwait", label: "Kuwait" },
+            { value: "Latvia", label: "Latvia" },
+            { value: "Lebanon", label: "Lebanon" },
+            { value: "Lithuania", label: "Lithuania" },
+            { value: "Luxembourg", label: "Luxembourg" },
+            { value: "Malaysia", label: "Malaysia" },
+            { value: "Mexico", label: "Mexico" },
+            { value: "Morocco", label: "Morocco" },
+            { value: "Netherlands", label: "Netherlands" },
+            { value: "New Zealand", label: "New Zealand" },
+            { value: "Nicaragua", label: "Nicaragua" },
+            { value: "Nigeria", label: "Nigeria" },
+            { value: "Norway", label: "Norway" },
+            { value: "Pakistan", label: "Pakistan" },
+            { value: "Panama", label: "Panama" },
+            { value: "Paraguay", label: "Paraguay" },
+            { value: "Peru", label: "Peru" },
+            { value: "Philippines", label: "Philippines" },
+            { value: "Poland", label: "Poland" },
+            { value: "Portugal", label: "Portugal" },
+            { value: "Qatar", label: "Qatar" },
+            { value: "Romania", label: "Romania" },
+            { value: "Russia", label: "Russia" },
+            { value: "Saudi Arabia", label: "Saudi Arabia" },
+            { value: "Serbia", label: "Serbia" },
+            { value: "Singapore", label: "Singapore" },
+            { value: "Slovakia", label: "Slovakia" },
+            { value: "Slovenia", label: "Slovenia" },
+            { value: "South Africa", label: "South Africa" },
+            { value: "South Korea", label: "South Korea" },
+            { value: "Spain", label: "Spain" },
+            { value: "Sri Lanka", label: "Sri Lanka" },
+            { value: "Sweden", label: "Sweden" },
+            { value: "Switzerland", label: "Switzerland" },
+            { value: "Thailand", label: "Thailand" },
+            { value: "Turkey", label: "Turkey" },
+            { value: "Ukraine", label: "Ukraine" },
+            { value: "United Arab Emirates", label: "United Arab Emirates" },
+            { value: "United Kingdom", label: "United Kingdom" },
+            { value: "United States", label: "United States" },
+            { value: "Uruguay", label: "Uruguay" },
+            { value: "Venezuela", label: "Venezuela" },
+            { value: "Vietnam", label: "Vietnam" }
+        ];
 
         const LevelTest = () => {
             const [currentPage, setCurrentPage] = React.useState('start');
@@ -91,6 +194,7 @@
                 lastName: '',
                 email: '',
                 city: '',
+                country: '', // 🆕 NUEVO CAMPO PAÍS
                 howFoundUs: '',
                 learningPurpose: '',
                 dataProtection: false
@@ -99,7 +203,7 @@
             const [loading, setLoading] = React.useState(false);
             const [language, setLanguage] = React.useState(getCurrentLanguage());
             
-            // 🔧 EXACTO como inglés: Estado para manejar reCAPTCHA
+            // Estado para manejar reCAPTCHA v2
             const [recaptchaLoaded, setRecaptchaLoaded] = React.useState(false);
 
             React.useEffect(() => {
@@ -112,7 +216,7 @@
                 };
             }, []);
 
-            // 🔧 EXACTO como inglés: useEffect para manejar reCAPTCHA
+            // useEffect para manejar reCAPTCHA
             React.useEffect(() => {
                 // Listener para cuando reCAPTCHA esté listo
                 const handleRecaptchaReady = () => {
@@ -132,7 +236,7 @@
                 };
             }, []);
 
-            // 🔧 EXACTO como inglés: useEffect para renderizar widget cuando llegamos al formulario
+            // useEffect para renderizar widget cuando llegamos al formulario
             React.useEffect(() => {
                 if (currentPage === 'studentForm' && recaptchaLoaded && !window.recaptchaWidgetId) {
                     // Esperamos un poco para que el DOM esté listo
@@ -256,12 +360,12 @@
                 return "A1";
             };
 
-            // 🔧 EXACTO como inglés: FUNCIÓN submitWithRecaptchaV2
+            // FUNCIÓN submitWithRecaptchaV2 CON CAMPO PAÍS
             const submitWithRecaptchaV2 = async () => {
                 setLoading(true);
                 
                 console.log('═══════════════════════════════════════════════════════════════');
-                console.log('🚀 [INICIO] Proceso de envío con reCAPTCHA v2 ESPAÑOL (COPIA EXACTA INGLÉS)');
+                console.log('🚀 [INICIO] Proceso de envío con reCAPTCHA v2 ESPAÑOL + PAÍS');
                 console.log('═══════════════════════════════════════════════════════════════');
                 
                 try {
@@ -289,7 +393,6 @@
                         console.log('🔍 [DEBUG] Token completo:', recaptchaResponse);
                         console.log('🔍 [DEBUG] Longitud token:', recaptchaResponse ? recaptchaResponse.length : 'NULL');
                         console.log('🔍 [DEBUG] Widget ID usado:', window.recaptchaWidgetId);
-                        console.log('🔍 [DEBUG] Timestamp:', new Date().toISOString());
                         console.log('✅ [PASO 1] Respuesta obtenida del widget ID:', window.recaptchaWidgetId);
                     } catch (error) {
                         console.error('❌ [ERROR] Error obteniendo respuesta reCAPTCHA:', error);
@@ -315,8 +418,9 @@
                     console.log('✅ [PASO 2] Puntuación calculada:', score);
                     console.log('✅ [PASO 2] Nivel determinado:', level);
                     
-                    // PASO 3: Preparar datos completos
-                    console.log('📦 [PASO 3] Preparando datos para envío...');
+                    // PASO 3: Preparar datos completos CON PAÍS
+                    console.log('📦 [PASO 3] Preparando datos para envío CON PAÍS...');
+                    console.log('🆕 [PAÍS] País seleccionado:', studentData.country || 'No especificado');
                     
                     // Crear objeto con respuestas detalladas
                     const detailedAnswers = {};
@@ -333,6 +437,7 @@
                         lastName: studentData.lastName,
                         email: studentData.email,
                         city: studentData.city || "",
+                        country: studentData.country || "", // 🆕 CAMPO PAÍS
                         howFoundUs: studentData.howFoundUs || "",
                         learningPurpose: studentData.learningPurpose || "",
                         
@@ -352,6 +457,7 @@
                     };
                     
                     console.log('✅ [PASO 3] Datos preparados correctamente');
+                    console.log('🆕 [PASO 3] Incluido campo país:', dataToSend.country);
                     
                     // PASO 4: Enviar a función Netlify
                     console.log('🌐 [PASO 4] Enviando a función Netlify ESPAÑOL...');
@@ -370,7 +476,7 @@
                     // PASO 5: Procesar respuesta
                     if (response.ok) {
                         const responseData = await response.json();
-                        console.log('✅ [ÉXITO] ¡Datos guardados exitosamente!', responseData);
+                        console.log('✅ [ÉXITO] ¡Datos guardados exitosamente CON PAÍS!', responseData);
                         
                         // Resetear reCAPTCHA para próximo uso
                         try {
@@ -588,7 +694,7 @@
                 );
             }
 
-            // Formulario de datos del estudiante
+            // Formulario de datos del estudiante CON CAMPO PAÍS
             if (currentPage === 'studentForm') {
                 return (
                     <div className="min-h-screen bg-playa-yellow-light p-4 pt-8">
@@ -663,17 +769,39 @@
                                         />
                                     </div>
 
-                                    <div>
-                                        <label className="block text-sm font-medium text-black mb-2 font-aglet">
-                                            {t('studentForm.fields.city.label')}
-                                        </label>
-                                        <input
-                                            type="text"
-                                            value={studentData.city}
-                                            onChange={(e) => handleStudentDataChange('city', e.target.value)}
-                                            className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-playa-purple focus:border-playa-purple font-raleway text-black"
-                                            placeholder={t('studentForm.fields.city.placeholder')}
-                                        />
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-sm font-medium text-black mb-2 font-aglet">
+                                                {t('studentForm.fields.city.label')}
+                                            </label>
+                                            <input
+                                                type="text"
+                                                value={studentData.city}
+                                                onChange={(e) => handleStudentDataChange('city', e.target.value)}
+                                                className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-playa-purple focus:border-playa-purple font-raleway text-black"
+                                                placeholder={t('studentForm.fields.city.placeholder')}
+                                            />
+                                        </div>
+
+                                        {/* 🆕 NUEVO CAMPO PAÍS */}
+                                        <div>
+                                            <label className="flex items-center gap-2 text-sm font-medium text-black mb-2 font-aglet">
+                                                <icons.Globe />
+                                                {t('studentForm.fields.country.label')}
+                                            </label>
+                                            <select
+                                                value={studentData.country}
+                                                onChange={(e) => handleStudentDataChange('country', e.target.value)}
+                                                className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-playa-purple focus:border-playa-purple font-raleway text-black"
+                                            >
+                                                <option value="">{t('studentForm.fields.country.placeholder')}</option>
+                                                {COUNTRIES.map((country) => (
+                                                    <option key={country.value} value={country.value}>
+                                                        {country.label}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
                                     </div>
 
                                     <div>
@@ -727,7 +855,7 @@
                                         </div>
                                     </div>
 
-                                    {/* 🔧 EXACTO como inglés: WIDGET RECAPTCHA */}
+                                    {/* WIDGET RECAPTCHA */}
                                     <div className="flex justify-center mb-6">
                                         <div id="recaptcha-container" className="min-h-[78px] flex items-center justify-center">
                                             {!recaptchaLoaded && (
@@ -776,7 +904,7 @@
                 );
             }
 
-            // Página de resultados
+            // Página de resultados CON PAÍS
             if (currentPage === 'results') {
                 const score = calculateScore();
                 const level = getLevel(score.correct);
@@ -823,6 +951,8 @@
                                         <p><strong>{t('results.fields.name')}</strong> {studentData.firstName} {studentData.lastName}</p>
                                         <p><strong>{t('results.fields.email')}</strong> {studentData.email}</p>
                                         {studentData.city && <p><strong>{t('results.fields.city')}</strong> {studentData.city}</p>}
+                                        {/* 🆕 MOSTRAR PAÍS EN RESULTADOS */}
+                                        {studentData.country && <p><strong>{t('results.fields.country')}</strong> {studentData.country}</p>}
                                         {studentData.howFoundUs && <p><strong>{t('results.fields.howFoundUs')}</strong> {studentData.howFoundUs}</p>}
                                         {studentData.learningPurpose && <p><strong>{t('results.fields.purpose')}</strong> {studentData.learningPurpose}</p>}
                                     </div>
@@ -837,7 +967,7 @@
                                         setCurrentPage('start');
                                         setAnswers({});
                                         setStudentData({ 
-                                            firstName: '', lastName: '', email: '', city: '',
+                                            firstName: '', lastName: '', email: '', city: '', country: '', // 🆕 RESETEAR PAÍS
                                             howFoundUs: '', learningPurpose: '', dataProtection: false
                                         });
                                         setSubmitted(false);
