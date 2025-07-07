@@ -444,7 +444,7 @@
                         // 📊 Resultados del test
                         score: score.correct,
                         total: score.total,
-                        percentage: score.percentage,
+                        // ❌ ELIMINADO: percentage: score.percentage, // Campo calculado por Airtable
                         level: level,
                         
                         // 🔍 Datos adicionales PARA ESPAÑOL
@@ -458,6 +458,7 @@
                     
                     console.log('✅ [PASO 3] Datos preparados correctamente');
                     console.log('🆕 [PASO 3] Incluido campo país:', dataToSend.country);
+                    console.log('⚠️ [PASO 3] Porcentaje NO enviado - será calculado por Airtable');
                     
                     // PASO 4: Enviar a función Netlify
                     console.log('🌐 [PASO 4] Enviando a función Netlify ESPAÑOL...');
