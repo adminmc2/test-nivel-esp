@@ -1,11 +1,11 @@
 // =================================
-// NETLIFY FUNCTION: verify-and-save.js - reCAPTCHA v2 ESPAÑOL
+// NETLIFY FUNCTION: verify-and-save.js - reCAPTCHA v2 ESPAÑOL CON PAÍS
 // =================================
 
 const fetch = require('node-fetch');
 
 exports.handler = async (event, context) => {
-    console.log('🚀 [NETLIFY FUNCTION] Iniciando verificación reCAPTCHA v2 ESPAÑOL...');
+    console.log('🚀 [NETLIFY FUNCTION] Iniciando verificación reCAPTCHA v2 ESPAÑOL CON PAÍS...');
     
     // Solo permitir POST requests
     if (event.httpMethod !== 'POST') {
@@ -19,6 +19,7 @@ exports.handler = async (event, context) => {
         // Parsear datos del formulario
         const data = JSON.parse(event.body);
         console.log('📊 [STEP 1] Datos recibidos del frontend');
+        console.log('🆕 [PAÍS] País seleccionado:', data.country || 'No especificado');
         
         // STEP 1: Verificar reCAPTCHA v2 con Google
         console.log('🛡️ [STEP 2] Verificando reCAPTCHA v2 con Google...');
@@ -52,7 +53,7 @@ exports.handler = async (event, context) => {
         
         console.log('✅ [STEP 2] reCAPTCHA v2 verificado exitosamente');
         
-        // STEP 2: Enviar a Airtable (ADAPTADO PARA ESPAÑOL)
+        // STEP 2: Enviar a Airtable (ADAPTADO PARA ESPAÑOL CON PAÍS)
         console.log('📤 [STEP 3] Enviando datos a Airtable...');
         
         const airtableData = {
@@ -62,6 +63,7 @@ exports.handler = async (event, context) => {
                     "Apellidos del estudiante": data.lastName,
                     "Email": data.email,
                     "Ciudad": data.city || "",
+                    "País": data.country || "", // 🆕 NUEVO CAMPO PAÍS
                     "Canal de adquisición": data.howFoundUs || "",
                     "Propósito": data.learningPurpose || "",
                     "Tipo de test de nivel": "Test de nivel español",  // CAMBIADO DE INGLÉS
@@ -75,6 +77,8 @@ exports.handler = async (event, context) => {
                 }
             }]
         };
+        
+        console.log('🆕 [STEP 3] Campo país incluido:', data.country || 'No especificado');
         
         const airtableResponse = await fetch(`https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_NAME}`, {
             method: 'POST',
@@ -98,7 +102,7 @@ exports.handler = async (event, context) => {
         }
         
         const airtableResult = await airtableResponse.json();
-        console.log('✅ [STEP 3] Datos guardados en Airtable exitosamente');
+        console.log('✅ [STEP 3] Datos guardados en Airtable exitosamente CON PAÍS');
         console.log('🎉 [SUCCESS] Proceso ESPAÑOL completado exitosamente');
         
         // Respuesta exitosa
@@ -111,8 +115,9 @@ exports.handler = async (event, context) => {
             },
             body: JSON.stringify({ 
                 success: true,
-                message: 'Datos guardados exitosamente con reCAPTCHA v2 - ESPAÑOL',
-                recordId: airtableResult.records[0].id
+                message: 'Datos guardados exitosamente con reCAPTCHA v2 - ESPAÑOL CON PAÍS',
+                recordId: airtableResult.records[0].id,
+                country: data.country || 'No especificado' // 🆕 CONFIRMAR PAÍS
             })
         };
         
