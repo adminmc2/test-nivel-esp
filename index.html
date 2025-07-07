@@ -19,6 +19,7 @@
 
     <!-- Configuración de Airtable -->
     <script src="js/config.js"></script>
+    <!-- 🔧 CARGAR SISTEMA DE TRADUCCIONES ANTES DE REACT -->
     <script src="js/languages.js"></script>
 
     <!-- 🔧 Callback global para reCAPTCHA -->
@@ -201,14 +202,25 @@
             });
             const [submitted, setSubmitted] = React.useState(false);
             const [loading, setLoading] = React.useState(false);
-            const [language, setLanguage] = React.useState(getCurrentLanguage());
+            
+            // 🔧 USAR FUNCIONES GLOBALES DE LANGUAGES.JS
+            const [language, setLanguageState] = React.useState(() => {
+                // Verificar que las funciones globales estén disponibles
+                if (typeof getCurrentLanguage === 'function') {
+                    return getCurrentLanguage();
+                }
+                return 'ESP'; // fallback
+            });
             
             // Estado para manejar reCAPTCHA v2
             const [recaptchaLoaded, setRecaptchaLoaded] = React.useState(false);
 
             React.useEffect(() => {
+                // 🔧 FUNCIÓN PARA ACTUALIZAR CONTENIDO CUANDO CAMBIA IDIOMA
                 window.updatePageContent = () => {
-                    setLanguage(getCurrentLanguage());
+                    if (typeof getCurrentLanguage === 'function') {
+                        setLanguageState(getCurrentLanguage());
+                    }
                 };
                 
                 return () => {
@@ -262,6 +274,16 @@
                     }, 100);
                 }
             }, [currentPage, recaptchaLoaded]);
+
+            // 🔧 FUNCIÓN HELPER PARA TRADUCCIONES QUE USA LAS FUNCIONES GLOBALES
+            const getTranslation = (path) => {
+                if (typeof t === 'function') {
+                    return t(path);
+                }
+                // Fallback si no está disponible
+                console.warn('Función t() no disponible, usando clave:', path);
+                return path;
+            };
 
             const LanguageSelector = () => (
                 <div className="language-selector">
@@ -572,14 +594,14 @@
                                     </div>
                                 </div>
                                 <h1 className="font-aglet text-4xl font-bold text-black mb-6">
-                                    {t('startPage.title')}
+                                    {getTranslation('startPage.title')}
                                 </h1>
                                 <p className="text-lg text-black mb-6 font-raleway">
-                                    {t('startPage.subtitle')}
+                                    {getTranslation('startPage.subtitle')}
                                 </p>
                                 <div className="bg-playa-purple-light rounded-xl p-6 mb-6 border border-playa-purple">
                                     <p className="font-raleway font-medium text-black">
-                                        📋 {t('startPage.info')}
+                                        📋 {getTranslation('startPage.info')}
                                     </p>
                                 </div>
                             </div>
@@ -588,7 +610,7 @@
                                 onClick={() => setCurrentPage('1')}
                                 className="btn-primary flex items-center mx-auto gap-3 font-aglet"
                             >
-                                {t('startPage.startButton')}
+                                {getTranslation('startPage.startButton')}
                                 <icons.ChevronRight />
                             </button>
                         </div>
@@ -620,10 +642,10 @@
                             <div className="bg-white rounded-xl p-6 mb-6 shadow-sm border border-gray-100">
                                 <div className="flex justify-between items-center mb-3">
                                     <span className="font-aglet text-sm font-medium text-black">
-                                        {t('progress.question')} {questionPage.id} {t('progress.of')} {testQuestions.length}
+                                        {getTranslation('progress.question')} {questionPage.id} {getTranslation('progress.of')} {testQuestions.length}
                                     </span>
                                     <span className="font-aglet text-sm font-medium text-playa-purple">
-                                        {Math.round(progress)}% {t('progress.completed')}
+                                        {Math.round(progress)}% {getTranslation('progress.completed')}
                                     </span>
                                 </div>
                                 <div className="w-full bg-gray-200 rounded-full h-3">
@@ -672,7 +694,7 @@
                                         className="flex items-center gap-2 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-black rounded-lg transition-all duration-200 font-aglet"
                                     >
                                         <icons.ChevronLeft />
-                                        {t('navigation.previous')}
+                                        {getTranslation('navigation.previous')}
                                     </button>
                                     
                                     <button
@@ -684,7 +706,7 @@
                                                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                         }`}
                                     >
-                                        {questionPage.id === testQuestions.length ? t('navigation.finish') : t('navigation.next')}
+                                        {questionPage.id === testQuestions.length ? getTranslation('navigation.finish') : getTranslation('navigation.next')}
                                         <icons.ChevronRight />
                                     </button>
                                 </div>
@@ -694,7 +716,7 @@
                 );
             }
 
-            // Formulario de datos del estudiante CON CAMPO PAÍS
+            // Formulario de datos del estudiante CON CAMPO PAÍS CON TRADUCCIONES CORREGIDAS
             if (currentPage === 'studentForm') {
                 return (
                     <div className="min-h-screen bg-playa-yellow-light p-4 pt-8">
@@ -717,10 +739,10 @@
                                         <icons.User />
                                     </div>
                                     <h2 className="font-aglet text-3xl font-bold text-black mb-2">
-                                        {t('studentForm.title')}
+                                        {getTranslation('studentForm.title')}
                                     </h2>
                                     <p className="text-black font-raleway">
-                                        {t('studentForm.subtitle')}
+                                        {getTranslation('studentForm.subtitle')}
                                     </p>
                                 </div>
 
@@ -728,28 +750,28 @@
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                             <label className="block text-sm font-medium text-black mb-2 font-aglet">
-                                                {t('studentForm.fields.firstName.label')}
+                                                {getTranslation('studentForm.fields.firstName.label')}
                                             </label>
                                             <input
                                                 type="text"
                                                 value={studentData.firstName}
                                                 onChange={(e) => handleStudentDataChange('firstName', e.target.value)}
                                                 className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-playa-purple focus:border-playa-purple font-raleway text-black"
-                                                placeholder={t('studentForm.fields.firstName.placeholder')}
+                                                placeholder={getTranslation('studentForm.fields.firstName.placeholder')}
                                                 required
                                             />
                                         </div>
 
                                         <div>
                                             <label className="block text-sm font-medium text-black mb-2 font-aglet">
-                                                {t('studentForm.fields.lastName.label')}
+                                                {getTranslation('studentForm.fields.lastName.label')}
                                             </label>
                                             <input
                                                 type="text"
                                                 value={studentData.lastName}
                                                 onChange={(e) => handleStudentDataChange('lastName', e.target.value)}
                                                 className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-playa-purple focus:border-playa-purple font-raleway text-black"
-                                                placeholder={t('studentForm.fields.lastName.placeholder')}
+                                                placeholder={getTranslation('studentForm.fields.lastName.placeholder')}
                                                 required
                                             />
                                         </div>
@@ -757,14 +779,14 @@
 
                                     <div>
                                         <label className="block text-sm font-medium text-black mb-2 font-aglet">
-                                            {t('studentForm.fields.email.label')}
+                                            {getTranslation('studentForm.fields.email.label')}
                                         </label>
                                         <input
                                             type="email"
                                             value={studentData.email}
                                             onChange={(e) => handleStudentDataChange('email', e.target.value)}
                                             className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-playa-purple focus:border-playa-purple font-raleway text-black"
-                                            placeholder={t('studentForm.fields.email.placeholder')}
+                                            placeholder={getTranslation('studentForm.fields.email.placeholder')}
                                             required
                                         />
                                     </div>
@@ -772,29 +794,29 @@
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                             <label className="block text-sm font-medium text-black mb-2 font-aglet">
-                                                {t('studentForm.fields.city.label')}
+                                                {getTranslation('studentForm.fields.city.label')}
                                             </label>
                                             <input
                                                 type="text"
                                                 value={studentData.city}
                                                 onChange={(e) => handleStudentDataChange('city', e.target.value)}
                                                 className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-playa-purple focus:border-playa-purple font-raleway text-black"
-                                                placeholder={t('studentForm.fields.city.placeholder')}
+                                                placeholder={getTranslation('studentForm.fields.city.placeholder')}
                                             />
                                         </div>
 
-                                        {/* 🆕 CAMPO PAÍS - HARDCODEADO ESPAÑOL DIRECTO */}
+                                        {/* 🆕 CAMPO PAÍS CON TRADUCCIONES CORREGIDAS */}
                                         <div>
                                             <label className="flex items-center gap-2 text-sm font-medium text-black mb-2 font-aglet">
                                                 <icons.Globe />
-                                                País
+                                                {getTranslation('studentForm.fields.country.label')}
                                             </label>
                                             <select
                                                 value={studentData.country}
                                                 onChange={(e) => handleStudentDataChange('country', e.target.value)}
                                                 className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-playa-purple focus:border-playa-purple font-raleway text-black"
                                             >
-                                                <option value="">Selecciona tu país</option>
+                                                <option value="">{getTranslation('studentForm.fields.country.placeholder')}</option>
                                                 {COUNTRIES.map((country) => (
                                                     <option key={country.value} value={country.value}>
                                                         {country.label}
@@ -806,36 +828,36 @@
 
                                     <div>
                                         <label className="block text-sm font-medium text-black mb-2 font-aglet">
-                                            {t('studentForm.fields.howFoundUs.label')}
+                                            {getTranslation('studentForm.fields.howFoundUs.label')}
                                         </label>
                                         <select
                                             value={studentData.howFoundUs}
                                             onChange={(e) => handleStudentDataChange('howFoundUs', e.target.value)}
                                             className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-playa-purple focus:border-playa-purple font-raleway text-black"
                                         >
-                                            <option value="">{t('studentForm.fields.howFoundUs.options.placeholder')}</option>
-                                            <option value="busqueda-navegador">{t('studentForm.fields.howFoundUs.options.browser')}</option>
-                                            <option value="redes-sociales">{t('studentForm.fields.howFoundUs.options.social')}</option>
-                                            <option value="amigos">{t('studentForm.fields.howFoundUs.options.friends')}</option>
-                                            <option value="anuncios">{t('studentForm.fields.howFoundUs.options.ads')}</option>
-                                            <option value="otra">{t('studentForm.fields.howFoundUs.options.other')}</option>
+                                            <option value="">{getTranslation('studentForm.fields.howFoundUs.options.placeholder')}</option>
+                                            <option value="busqueda-navegador">{getTranslation('studentForm.fields.howFoundUs.options.browser')}</option>
+                                            <option value="redes-sociales">{getTranslation('studentForm.fields.howFoundUs.options.social')}</option>
+                                            <option value="amigos">{getTranslation('studentForm.fields.howFoundUs.options.friends')}</option>
+                                            <option value="anuncios">{getTranslation('studentForm.fields.howFoundUs.options.ads')}</option>
+                                            <option value="otra">{getTranslation('studentForm.fields.howFoundUs.options.other')}</option>
                                         </select>
                                     </div>
 
                                     <div>
                                         <label className="block text-sm font-medium text-black mb-2 font-aglet">
-                                            {t('studentForm.fields.purpose.label')}
+                                            {getTranslation('studentForm.fields.purpose.label')}
                                         </label>
                                         <select
                                             value={studentData.learningPurpose}
                                             onChange={(e) => handleStudentDataChange('learningPurpose', e.target.value)}
                                             className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-playa-purple focus:border-playa-purple font-raleway text-black"
                                         >
-                                            <option value="">{t('studentForm.fields.purpose.options.placeholder')}</option>
-                                            <option value="trabajo">{t('studentForm.fields.purpose.options.work')}</option>
-                                            <option value="estudios">{t('studentForm.fields.purpose.options.studies')}</option>
-                                            <option value="negocios">{t('studentForm.fields.purpose.options.business')}</option>
-                                            <option value="cultura">{t('studentForm.fields.purpose.options.culture')}</option>
+                                            <option value="">{getTranslation('studentForm.fields.purpose.options.placeholder')}</option>
+                                            <option value="trabajo">{getTranslation('studentForm.fields.purpose.options.work')}</option>
+                                            <option value="estudios">{getTranslation('studentForm.fields.purpose.options.studies')}</option>
+                                            <option value="negocios">{getTranslation('studentForm.fields.purpose.options.business')}</option>
+                                            <option value="cultura">{getTranslation('studentForm.fields.purpose.options.culture')}</option>
                                         </select>
                                     </div>
 
@@ -850,7 +872,7 @@
                                                 required
                                             />
                                             <label htmlFor="dataProtection" className="text-xs text-gray-700 font-raleway leading-relaxed">
-                                                <span className="font-semibold">{t('studentForm.dataProtection.title')}</span> {t('studentForm.dataProtection.text')}
+                                                <span className="font-semibold">{getTranslation('studentForm.dataProtection.title')}</span> {getTranslation('studentForm.dataProtection.text')}
                                             </label>
                                         </div>
                                     </div>
@@ -873,7 +895,7 @@
                                         className="flex items-center gap-2 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-black rounded-lg transition-all duration-200 font-aglet"
                                     >
                                         <icons.ChevronLeft />
-                                        {t('studentForm.buttons.back')}
+                                        {getTranslation('studentForm.buttons.back')}
                                     </button>
                                     
                                     <button
@@ -888,12 +910,12 @@
                                         {loading ? (
                                             <>
                                                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                                                {t('studentForm.buttons.sending')}
+                                                {getTranslation('studentForm.buttons.sending')}
                                             </>
                                         ) : (
                                             <>
                                                 <icons.CheckCircle />
-                                                {t('studentForm.buttons.submit')}
+                                                {getTranslation('studentForm.buttons.submit')}
                                             </>
                                         )}
                                     </button>
@@ -904,7 +926,7 @@
                 );
             }
 
-            // Página de resultados CON PAÍS
+            // Página de resultados CON PAÍS CON TRADUCCIONES CORREGIDAS
             if (currentPage === 'results') {
                 const score = calculateScore();
                 const level = getLevel(score.correct);
@@ -930,36 +952,36 @@
                                 </div>
                                 
                                 <h2 className="font-aglet text-3xl font-bold text-black mb-6">
-                                    {t('results.title')}
+                                    {getTranslation('results.title')}
                                 </h2>
                                 
                                 <div className="bg-playa-purple text-white rounded-xl p-8 mb-6">
                                     <h3 className="font-aglet text-2xl font-bold mb-4">
-                                        {t('results.yourLevel')} {t(`results.levels.${level}`)}
+                                        {getTranslation('results.yourLevel')} {getTranslation(`results.levels.${level}`)}
                                     </h3>
                                     <p className="font-raleway text-lg">
-                                        {score.correct} {t('progress.of')} {score.total} {t('results.score')}
+                                        {score.correct} {getTranslation('progress.of')} {score.total} {getTranslation('results.score')}
                                     </p>
                                     <p className="font-raleway text-base opacity-90">
-                                        ({score.percentage}% {t('results.percentage')})
+                                        ({score.percentage}% {getTranslation('results.percentage')})
                                     </p>
                                 </div>
 
                                 <div className="bg-gray-50 rounded-xl p-6 mb-6 border border-gray-200">
-                                    <h4 className="font-aglet font-bold text-black mb-4 text-lg">{t('results.savedData')}</h4>
+                                    <h4 className="font-aglet font-bold text-black mb-4 text-lg">{getTranslation('results.savedData')}</h4>
                                     <div className="text-left space-y-2 text-black font-raleway">
-                                        <p><strong>{t('results.fields.name')}</strong> {studentData.firstName} {studentData.lastName}</p>
-                                        <p><strong>{t('results.fields.email')}</strong> {studentData.email}</p>
-                                        {studentData.city && <p><strong>{t('results.fields.city')}</strong> {studentData.city}</p>}
-                                        {/* 🆕 PAÍS EN RESULTADOS - HARDCODEADO ESPAÑOL */}
-                                        {studentData.country && <p><strong>País:</strong> {studentData.country}</p>}
-                                        {studentData.howFoundUs && <p><strong>{t('results.fields.howFoundUs')}</strong> {studentData.howFoundUs}</p>}
-                                        {studentData.learningPurpose && <p><strong>{t('results.fields.purpose')}</strong> {studentData.learningPurpose}</p>}
+                                        <p><strong>{getTranslation('results.fields.name')}</strong> {studentData.firstName} {studentData.lastName}</p>
+                                        <p><strong>{getTranslation('results.fields.email')}</strong> {studentData.email}</p>
+                                        {studentData.city && <p><strong>{getTranslation('results.fields.city')}</strong> {studentData.city}</p>}
+                                        {/* 🆕 PAÍS EN RESULTADOS CON TRADUCCIONES CORREGIDAS */}
+                                        {studentData.country && <p><strong>{getTranslation('results.fields.country')}</strong> {studentData.country}</p>}
+                                        {studentData.howFoundUs && <p><strong>{getTranslation('results.fields.howFoundUs')}</strong> {studentData.howFoundUs}</p>}
+                                        {studentData.learningPurpose && <p><strong>{getTranslation('results.fields.purpose')}</strong> {studentData.learningPurpose}</p>}
                                     </div>
                                 </div>
 
                                 <p className="text-black mb-8 font-raleway">
-                                    {t('results.successMessage')}
+                                    {getTranslation('results.successMessage')}
                                 </p>
 
                                 <button
@@ -976,7 +998,7 @@
                                     }}
                                     className="bg-playa-purple hover:bg-playa-navy text-white font-bold py-4 px-8 rounded-lg transition-all duration-200 font-aglet"
                                 >
-                                    {t('results.newTestButton')}
+                                    {getTranslation('results.newTestButton')}
                                 </button>
                             </div>
                         </div>
