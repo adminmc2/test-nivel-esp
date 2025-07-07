@@ -79,6 +79,7 @@ exports.handler = async (event, context) => {
         };
         
         console.log('🆕 [STEP 3] Campo país incluido:', data.country || 'No especificado');
+        console.log('⚠️ [STEP 3] Campo porcentaje NO enviado - calculado por Airtable');
         
         const airtableResponse = await fetch(`https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_NAME}`, {
             method: 'POST',
