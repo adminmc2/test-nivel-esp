@@ -1,7 +1,4 @@
-// 🆕 CAMPO PAÍS CORREGIDO
-                country: {
-                    label: "País *",
-                // =================================
+// =================================
 // SISTEMA BILINGÜE - HABLANDIS TEST DE ESPAÑOL
 // =================================
 
@@ -61,14 +58,10 @@ const TRANSLATIONS = {
                     label: "Ciudad",
                     placeholder: "Tu ciudad"
                 },
-                // 🆕 NUEVO CAMPO PAÍS
+                // 🆕 CAMPO PAÍS CORREGIDO (SIN DUPLICADOS)
                 country: {
                     label: "País",
                     placeholder: "Selecciona tu país"
-                },
-                country: {
-                    label: "Country",
-                    placeholder: "Select your country"
                 },
                 howFoundUs: {
                     label: "¿Cómo nos has conocido?",
@@ -91,10 +84,6 @@ const TRANSLATIONS = {
                         culture: "Cultura"
                     }
                 }
-            },
-            country: {
-                label: "País",
-                placeholder: "Selecciona tu país"
             },
             dataProtection: {
                 title: "Protección de Datos:",
@@ -129,7 +118,7 @@ const TRANSLATIONS = {
                 name: "Nombre:",
                 email: "Email:",
                 city: "Ciudad:",
-                country: "País:", // 🆕 NUEVO CAMPO
+                country: "País:", // 🆕 CAMPO PAÍS EN RESULTADOS
                 howFoundUs: "Cómo nos conoció:",
                 purpose: "Propósito:"
             },
@@ -188,7 +177,7 @@ const TRANSLATIONS = {
                     label: "City",
                     placeholder: "Your city"
                 },
-                // 🆕 CAMPO PAÍS EN INGLÉS
+                // 🆕 CAMPO PAÍS EN INGLÉS (SIN DUPLICADOS)
                 country: {
                     label: "Country",
                     placeholder: "Select your country"
@@ -248,7 +237,7 @@ const TRANSLATIONS = {
                 name: "Name:",
                 email: "Email:",
                 city: "City:",
-                country: "Country:",
+                country: "Country:", // 🆕 CAMPO PAÍS EN RESULTADOS
                 howFoundUs: "How found us:",
                 purpose: "Purpose:"
             },
