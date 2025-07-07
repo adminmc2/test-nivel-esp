@@ -201,19 +201,12 @@
             });
             const [submitted, setSubmitted] = React.useState(false);
             const [loading, setLoading] = React.useState(false);
-            const [language, setLanguage] = React.useState('ESP'); // Forzar español por defecto
+            const [language, setLanguage] = React.useState(getCurrentLanguage());
             
             // Estado para manejar reCAPTCHA v2
             const [recaptchaLoaded, setRecaptchaLoaded] = React.useState(false);
 
             React.useEffect(() => {
-                // Forzar idioma español al cargar
-                if (typeof getCurrentLanguage === 'function') {
-                    setLanguage(getCurrentLanguage());
-                } else {
-                    setLanguage('ESP'); // Fallback
-                }
-                
                 window.updatePageContent = () => {
                     setLanguage(getCurrentLanguage());
                 };
@@ -465,7 +458,6 @@
                     
                     console.log('✅ [PASO 3] Datos preparados correctamente');
                     console.log('🆕 [PASO 3] Incluido campo país:', dataToSend.country);
-                    console.log('⚠️ [PASO 3] Porcentaje NO enviado - será calculado por Airtable');
                     
                     // PASO 4: Enviar a función Netlify
                     console.log('🌐 [PASO 4] Enviando a función Netlify ESPAÑOL...');
@@ -791,30 +783,18 @@
                                             />
                                         </div>
 
-                                        {/* 🚨 DEBUG VISUAL - TEMPORAL */}
-                                        <div className="bg-red-100 p-2 mb-4 rounded text-xs">
-                                            <strong>🔍 DEBUG:</strong><br/>
-                                            Language state: {language}<br/>
-                                            getCurrentLanguage(): {typeof getCurrentLanguage === 'function' ? getCurrentLanguage() : 'función no disponible'}<br/>
-                                            t() test: {typeof t === 'function' ? t('studentForm.fields.country.label') : 'función t no disponible'}
-                                        </div>
-
-                                        {/* 🆕 NUEVO CAMPO PAÍS - HARDCODEADO CON DEBUG */}
+                                        {/* 🆕 CAMPO PAÍS - USANDO TRADUCCIONES CORREGIDAS */}
                                         <div>
                                             <label className="flex items-center gap-2 text-sm font-medium text-black mb-2 font-aglet">
                                                 <icons.Globe />
-                                                {(() => {
-                                                    const currentLang = getCurrentLanguage();
-                                                    console.log('🔍 [DEBUG] Idioma actual:', currentLang);
-                                                    return currentLang === 'ESP' ? 'País' : 'Country';
-                                                })()}
+                                                {t('studentForm.fields.country.label')}
                                             </label>
                                             <select
                                                 value={studentData.country}
                                                 onChange={(e) => handleStudentDataChange('country', e.target.value)}
                                                 className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-playa-purple focus:border-playa-purple font-raleway text-black"
                                             >
-                                                <option value="">{getCurrentLanguage() === 'ESP' ? 'Selecciona tu país' : 'Select your country'}</option>
+                                                <option value="">{t('studentForm.fields.country.placeholder')}</option>
                                                 {COUNTRIES.map((country) => (
                                                     <option key={country.value} value={country.value}>
                                                         {country.label}
@@ -971,8 +951,8 @@
                                         <p><strong>{t('results.fields.name')}</strong> {studentData.firstName} {studentData.lastName}</p>
                                         <p><strong>{t('results.fields.email')}</strong> {studentData.email}</p>
                                         {studentData.city && <p><strong>{t('results.fields.city')}</strong> {studentData.city}</p>}
-                                        {/* 🆕 MOSTRAR PAÍS EN RESULTADOS - HARDCODEADO */}
-                                        {studentData.country && <p><strong>{getCurrentLanguage() === 'ESP' ? 'País:' : 'Country:'}</strong> {studentData.country}</p>}
+                                        {/* 🆕 MOSTRAR PAÍS EN RESULTADOS - TRADUCCIONES CORREGIDAS */}
+                                        {studentData.country && <p><strong>{t('results.fields.country')}</strong> {studentData.country}</p>}
                                         {studentData.howFoundUs && <p><strong>{t('results.fields.howFoundUs')}</strong> {studentData.howFoundUs}</p>}
                                         {studentData.learningPurpose && <p><strong>{t('results.fields.purpose')}</strong> {studentData.learningPurpose}</p>}
                                     </div>
