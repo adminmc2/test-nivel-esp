@@ -267,10 +267,14 @@ let currentLanguage = 'ESP';
  * @param {string} lang - 'ESP' o 'ENG'
  */
 function setLanguage(lang) {
+    console.log('🔍 [DEBUG] setLanguage llamado con:', lang);
     if (lang === 'ESP' || lang === 'ENG') {
         currentLanguage = lang;
         localStorage.setItem('hablandis_language', lang);
+        console.log('🔍 [DEBUG] Idioma establecido como:', currentLanguage);
         updateLanguageUI();
+    } else {
+        console.warn('🔍 [DEBUG] Idioma inválido recibido:', lang);
     }
 }
 
@@ -279,6 +283,7 @@ function setLanguage(lang) {
  * @returns {string} 'ESP' o 'ENG'
  */
 function getCurrentLanguage() {
+    console.log('🔍 [DEBUG] getCurrentLanguage llamado, idioma actual:', currentLanguage);
     return currentLanguage;
 }
 
@@ -288,6 +293,7 @@ function getCurrentLanguage() {
  * @returns {string} Texto traducido
  */
 function t(path) {
+    console.log('🔍 [DEBUG] Función t() llamada con path:', path, 'idioma:', currentLanguage);
     const keys = path.split('.');
     let result = TRANSLATIONS[currentLanguage];
     
@@ -300,6 +306,7 @@ function t(path) {
         }
     }
     
+    console.log('🔍 [DEBUG] Resultado de traducción:', result);
     return result;
 }
 
@@ -331,12 +338,14 @@ function updateLanguageUI() {
 function initLanguageSystem() {
     // Recuperar idioma guardado o usar español por defecto
     const savedLanguage = localStorage.getItem('hablandis_language') || 'ESP';
+    console.log('🔍 [DEBUG] Idioma guardado en localStorage:', savedLanguage);
     setLanguage(savedLanguage);
     
     // Configurar eventos de los botones de idioma
     document.addEventListener('click', function(e) {
         if (e.target.hasAttribute('data-lang')) {
             const lang = e.target.getAttribute('data-lang');
+            console.log('🔍 [DEBUG] Cambiando idioma a:', lang);
             setLanguage(lang);
             
             // Si hay una función para actualizar el contenido, llamarla
