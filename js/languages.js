@@ -1,4 +1,7 @@
-// =================================
+// 🆕 CAMPO PAÍS CORREGIDO
+                country: {
+                    label: "País *",
+                // =================================
 // SISTEMA BILINGÜE - HABLANDIS TEST DE ESPAÑOL
 // =================================
 
@@ -185,7 +188,7 @@ const TRANSLATIONS = {
                     label: "City",
                     placeholder: "Your city"
                 },
-                // 🆕 NUEVO CAMPO PAÍS
+                // 🆕 CAMPO PAÍS EN INGLÉS
                 country: {
                     label: "Country",
                     placeholder: "Select your country"
@@ -245,7 +248,7 @@ const TRANSLATIONS = {
                 name: "Name:",
                 email: "Email:",
                 city: "City:",
-                country: "Country:", // 🆕 NUEVO CAMPO
+                country: "Country:",
                 howFoundUs: "How found us:",
                 purpose: "Purpose:"
             },
