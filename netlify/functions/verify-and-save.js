@@ -63,13 +63,13 @@ exports.handler = async (event, context) => {
                     "Apellidos del estudiante": data.lastName,
                     "Email": data.email,
                     "Ciudad": data.city || "",
-                    "País": data.country || "", // 🆕 NUEVO CAMPO PAÍS
+                    "País": data.country || "", // 🆕 CAMPO PAÍS CORREGIDO
                     "Canal de adquisición": data.howFoundUs || "",
                     "Propósito": data.learningPurpose || "",
                     "Tipo de test de nivel": "Test de nivel español",  // CAMBIADO DE INGLÉS
                     "Idioma": "Español",  // CAMBIADO DE INGLÉS
                     "Puntuación": data.score,
-                    "Porcentaje": data.percentage,
+                    // ❌ ELIMINADO: "Porcentaje": data.percentage, // Campo calculado por Airtable
                     "Nivel CEFR": data.level,
                     "Fecha de realización": new Date().toISOString().split('T')[0],
                     "Respuestas detalladas": data.detailedAnswers || JSON.stringify(data.answers, null, 2)
