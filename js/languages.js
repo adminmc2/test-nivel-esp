@@ -58,6 +58,15 @@ const TRANSLATIONS = {
                     label: "Ciudad",
                     placeholder: "Tu ciudad"
                 },
+                // 🆕 NUEVO CAMPO PAÍS
+                country: {
+                    label: "País",
+                    placeholder: "Selecciona tu país"
+                },
+                country: {
+                    label: "Country",
+                    placeholder: "Select your country"
+                },
                 howFoundUs: {
                     label: "¿Cómo nos has conocido?",
                     options: {
@@ -79,6 +88,10 @@ const TRANSLATIONS = {
                         culture: "Cultura"
                     }
                 }
+            },
+            country: {
+                label: "País",
+                placeholder: "Selecciona tu país"
             },
             dataProtection: {
                 title: "Protección de Datos:",
@@ -113,6 +126,7 @@ const TRANSLATIONS = {
                 name: "Nombre:",
                 email: "Email:",
                 city: "Ciudad:",
+                country: "País:", // 🆕 NUEVO CAMPO
                 howFoundUs: "Cómo nos conoció:",
                 purpose: "Propósito:"
             },
@@ -171,6 +185,11 @@ const TRANSLATIONS = {
                     label: "City",
                     placeholder: "Your city"
                 },
+                // 🆕 NUEVO CAMPO PAÍS
+                country: {
+                    label: "Country",
+                    placeholder: "Select your country"
+                },
                 howFoundUs: {
                     label: "How did you find us?",
                     options: {
@@ -226,6 +245,7 @@ const TRANSLATIONS = {
                 name: "Name:",
                 email: "Email:",
                 city: "City:",
+                country: "Country:", // 🆕 NUEVO CAMPO
                 howFoundUs: "How found us:",
                 purpose: "Purpose:"
             },
