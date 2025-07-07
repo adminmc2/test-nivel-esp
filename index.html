@@ -783,18 +783,18 @@
                                             />
                                         </div>
 
-                                        {/* 🆕 CAMPO PAÍS - USANDO TRADUCCIONES CORREGIDAS */}
+                                        {/* 🆕 CAMPO PAÍS - HARDCODEADO ESPAÑOL DIRECTO */}
                                         <div>
                                             <label className="flex items-center gap-2 text-sm font-medium text-black mb-2 font-aglet">
                                                 <icons.Globe />
-                                                {t('studentForm.fields.country.label')}
+                                                País
                                             </label>
                                             <select
                                                 value={studentData.country}
                                                 onChange={(e) => handleStudentDataChange('country', e.target.value)}
                                                 className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-playa-purple focus:border-playa-purple font-raleway text-black"
                                             >
-                                                <option value="">{t('studentForm.fields.country.placeholder')}</option>
+                                                <option value="">Selecciona tu país</option>
                                                 {COUNTRIES.map((country) => (
                                                     <option key={country.value} value={country.value}>
                                                         {country.label}
@@ -951,8 +951,8 @@
                                         <p><strong>{t('results.fields.name')}</strong> {studentData.firstName} {studentData.lastName}</p>
                                         <p><strong>{t('results.fields.email')}</strong> {studentData.email}</p>
                                         {studentData.city && <p><strong>{t('results.fields.city')}</strong> {studentData.city}</p>}
-                                        {/* 🆕 MOSTRAR PAÍS EN RESULTADOS - TRADUCCIONES CORREGIDAS */}
-                                        {studentData.country && <p><strong>{t('results.fields.country')}</strong> {studentData.country}</p>}
+                                        {/* 🆕 PAÍS EN RESULTADOS - HARDCODEADO ESPAÑOL */}
+                                        {studentData.country && <p><strong>País:</strong> {studentData.country}</p>}
                                         {studentData.howFoundUs && <p><strong>{t('results.fields.howFoundUs')}</strong> {studentData.howFoundUs}</p>}
                                         {studentData.learningPurpose && <p><strong>{t('results.fields.purpose')}</strong> {studentData.learningPurpose}</p>}
                                     </div>
